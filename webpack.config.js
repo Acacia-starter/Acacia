@@ -1,18 +1,20 @@
 const path = require('path')
+const glob = require('glob')
 const fs = require('fs')
 const akaruConfig = require('./akaru.config')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 const devMode = process.env.NODE_ENV === 'development'
 
 let config = {
   mode: 'development',
-  entry: './src/index.js',
+  entry: ['./src/index.js'],
   output: {
+    publicPath: '/',
     path: path.resolve(__dirname, 'generate'),
     filename: 'bundle.js'
   },
@@ -30,7 +32,7 @@ let config = {
     new CleanWebpackPlugin(path.resolve(__dirname, 'generate')),
     new MiniCssExtractPlugin({
       filename: devMode ? '[name].css' : '[name].[hash].css',
-      chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
+      chunkFilename: devMode ? '[id].css' : '[id].[hash].css'
     })
   ],
   module: {
@@ -42,7 +44,7 @@ let config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: ["eslint-loader"],
+        use: ['eslint-loader'],
         enforce: 'pre'
       },
       {
@@ -51,28 +53,28 @@ let config = {
           devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
           'css-loader',
           'postcss-loader',
-          'sass-loader',
-        ],
+          'sass-loader'
+        ]
       }
     ]
   }
 }
 
+// Create pages
 let pageDir = path.resolve(__dirname, 'views/pages')
 let pages = fs.readdirSync(pageDir)
 
 pages.forEach(page => {
-
   let filename = path.resolve(__dirname, 'generate', (page === akaruConfig.index) ? '' : page, 'index.html')
 
   config.plugins.push(new HtmlWebpackPlugin({
-          filename,
-          template: path.resolve(pageDir, page, 'index.pug'),
-          templateParameters: {
-            ...require(path.resolve(pageDir, page, 'data.js')),
-            ...require(path.resolve(__dirname, 'views', 'base.data.js'))
-          }
-        }))
+    filename,
+    template: path.resolve(pageDir, page, 'index.pug'),
+    templateParameters: () => ({
+      ...require(path.resolve(pageDir, page, 'data.js')),
+      ...require(path.resolve(__dirname, 'views', 'base.data.js'))
+    })
+  }))
 })
 
 module.exports = config
