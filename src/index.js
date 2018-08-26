@@ -1,1 +1,3 @@
-console.log('COUCOU');
+import '../styles/index.scss'
+
+console.log('COUCOdddUU')
