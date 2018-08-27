@@ -1,3 +1,3 @@
-module.exports = {
-  index: 'home'
-}
+let config = {}
+
+export default config
