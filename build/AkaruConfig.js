@@ -3,6 +3,8 @@ import deepmerge from 'deepmerge'
 // TODO: regrouper par type ? js, css
 const BASE_CONFIG = {
   name: 'Akaru starter',
+  langs: ['en', 'fr'],
+  defaultLang: 'fr',
   index: 'home',
   devtool: false,
   favicon: 'src/favicon.jpg',

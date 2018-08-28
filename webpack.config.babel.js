@@ -248,54 +248,33 @@ if (akaruConfig.eslint) {
 */
 const pages = fs.readdirSync(paths.views('pages'))
 
-pages.forEach(pageName => {
-  let filename = paths.dist((pageName === akaruConfig.index) ? '' : pageName, 'index.html')
+akaruConfig.langs.forEach(lang => {
+  pages.forEach(pageName => {
+    let filename = paths.dist((lang === akaruConfig.defaultLang) ? '' : lang, (pageName === akaruConfig.index) ? '' : pageName, 'index.html')
 
-  WebpackConfig.addPlugin(new HtmlWebpackPlugin({
-    filename,
-    cache: false,
-    template: paths.views('pages', pageName, 'index.pug'),
-    // templateParameters: () => {
-    //   delete require.cache[paths.views('pages', pageName, 'data.js')]
-    //   delete require.cache[paths.views('data.js')]
+    WebpackConfig.addPlugin(new HtmlWebpackPlugin({
+      filename,
+      cache: false,
+      template: paths.views('pages', pageName, 'index.pug'),
+      templateParameters: () => {
+        delete require.cache[paths.views('pages', pageName, 'data.js')]
+        delete require.cache[paths.views('data.js')]
 
-    //   let page = require(paths.views('pages', pageName, 'data.js'))['default']()
-    //   let base = require(paths.views('data.js'))['default']()
+        let page = require(paths.views('pages', pageName, 'data.js'))['default']()
+        let base = require(paths.views('data.js'))['default']()
 
-    //   setTimeout(() => {
-    //     return {
-    //       ...base,
-    //       ...page
-    //     }
-    //   }, 1000)
-    // },
-    templateParameters: async () => {
-      delete require.cache[paths.views('pages', pageName, 'data.js')]
-      delete require.cache[paths.views('data.js')]
-
-      let page = require(paths.views('pages', pageName, 'data.js'))['default']()
-      let base = require(paths.views('data.js'))['default']()
-
-      // const callApi = () => {
-      //   return new Promise((resolve) => {
-      //     setTimeout(() => {
-      //       resolve({
-      //         ...base,
-      //         ...page
-      //       })
-      //     }, 100)
-      //   })
-      // }
-
-      const callApi = () => ({
-        ...base,
-        ...page
-      })
-
-      const params = await callApi()
-      return params
-    }
-  }))
+        // Config de la langue actuelle, fallback dans la langue default, fallback dans l'objet de base
+        return {
+          ...base,
+          ...base[akaruConfig.defaultLang],
+          ...base[lang],
+          ...page,
+          ...page[akaruConfig.defaultLang],
+          ...page[lang]
+        }
+      }
+    }))
+  })
 })
 
 module.exports = WebpackConfig.getConfig()

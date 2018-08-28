@@ -1,4 +1,7 @@
 export default () => ({
   pageName: 'home',
-  title: 'Home'
+  title: 'Hello',
+  en: {
+    title: 'Hello en'
+  }
 })
