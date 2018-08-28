@@ -8,13 +8,13 @@ import getFullAkaruConfig from './build/AkaruConfig'
 // plugins
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import ExtraWatchWebpackPlugin from 'extra-watch-webpack-plugin'
 
 import SpriteLoaderPlugin from 'svg-sprite-loader/plugin'
 require('@babel/register')
 
 const envs = {
-  NODE_ENV: process.env.NODE_ENV || 'development',
-  ZIP: process.env.ZIP || false
+  NODE_ENV: process.env.NODE_ENV || 'development'
 }
 
 const akaruConfig = getFullAkaruConfig(userAkaruConfig, envs.NODE_ENV)
@@ -72,6 +72,9 @@ WebpackConfig
   })
   .addPlugin(new MiniCssExtractPlugin({
     filename: akaruConfig.filenames.styles
+  }))
+  .addPlugin(new ExtraWatchWebpackPlugin({
+    files: [ paths.views('pages/**/*.js') ]
   }))
   .copyStatic(paths.static())
 
@@ -250,11 +253,12 @@ pages.forEach(pageName => {
 
   WebpackConfig.addPlugin(new HtmlWebpackPlugin({
     filename,
+    cache: false,
     template: paths.views('pages', pageName, 'index.pug'),
-    templateParameters: {
+    templateParameters: () => ({
       ...require(paths.views('pages', pageName, 'data.js')),
       ...require(paths.views('base.data.js'))
-    }
+    })
   }))
 })
 
