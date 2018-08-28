@@ -255,10 +255,14 @@ pages.forEach(pageName => {
     filename,
     cache: false,
     template: paths.views('pages', pageName, 'index.pug'),
-    templateParameters: () => ({
-      ...require(paths.views('pages', pageName, 'data.js')),
-      ...require(paths.views('base.data.js'))
-    })
+    templateParameters: () => {
+      delete require.cache[paths.views('pages', pageName, 'data.js')]
+      delete require.cache[paths.views('base.data.js')]
+      return {
+        ...require(paths.views('pages', pageName, 'data.js')),
+        ...require(paths.views('base.data.js'))
+      }
+    }
   }))
 })
 
