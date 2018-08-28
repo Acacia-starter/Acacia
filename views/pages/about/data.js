@@ -1,4 +1,6 @@
-module.exports = {
-  pageName: 'about',
-  title: 'About'
+export default () => {
+  return {
+    pageName: 'about',
+    title: 'About'
+  }
 }

@@ -1,4 +1,4 @@
-module.exports = {
+export default () => ({
   pageName: 'home',
   title: 'Home'
-}
+})

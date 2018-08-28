@@ -74,7 +74,7 @@ WebpackConfig
     filename: akaruConfig.filenames.styles
   }))
   .addPlugin(new ExtraWatchWebpackPlugin({
-    files: [ paths.views('pages/**/*.js') ]
+    files: [ paths.views('**/data.js') ]
   }))
   .copyStatic(paths.static())
 
@@ -255,13 +255,45 @@ pages.forEach(pageName => {
     filename,
     cache: false,
     template: paths.views('pages', pageName, 'index.pug'),
-    templateParameters: () => {
+    // templateParameters: () => {
+    //   delete require.cache[paths.views('pages', pageName, 'data.js')]
+    //   delete require.cache[paths.views('data.js')]
+
+    //   let page = require(paths.views('pages', pageName, 'data.js'))['default']()
+    //   let base = require(paths.views('data.js'))['default']()
+
+    //   setTimeout(() => {
+    //     return {
+    //       ...base,
+    //       ...page
+    //     }
+    //   }, 1000)
+    // },
+    templateParameters: async () => {
       delete require.cache[paths.views('pages', pageName, 'data.js')]
-      delete require.cache[paths.views('base.data.js')]
-      return {
-        ...require(paths.views('pages', pageName, 'data.js')),
-        ...require(paths.views('base.data.js'))
-      }
+      delete require.cache[paths.views('data.js')]
+
+      let page = require(paths.views('pages', pageName, 'data.js'))['default']()
+      let base = require(paths.views('data.js'))['default']()
+
+      // const callApi = () => {
+      //   return new Promise((resolve) => {
+      //     setTimeout(() => {
+      //       resolve({
+      //         ...base,
+      //         ...page
+      //       })
+      //     }, 100)
+      //   })
+      // }
+
+      const callApi = () => ({
+        ...base,
+        ...page
+      })
+
+      const params = await callApi()
+      return params
     }
   }))
 })
