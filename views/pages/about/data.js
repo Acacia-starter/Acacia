@@ -1,3 +1,4 @@
 module.exports = {
-  aboutTitle: 'okiiisss'
+  pageName: 'about',
+  title: 'About'
 }

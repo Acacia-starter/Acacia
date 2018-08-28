@@ -1,6 +1,6 @@
 module.exports = {
-    "extends": "standard",
-    "parserOptions": {
-      "ecmaVersion": 6
-    }
+  "extends": "standard",
+  "parserOptions": {
+    "ecmaVersion": 2018
+  }
 };

@@ -1,6 +1,7 @@
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import CleanWebpackPlugin from 'clean-webpack-plugin'
 import ZipPlugin from 'zip-webpack-plugin'
+import FaviconsWebpackPlugin from 'favicons-webpack-plugin'
 
 class WebpackConfig {
   constructor () {
@@ -48,11 +49,17 @@ class WebpackConfig {
   }
 
   setStats (stats) {
-    this.config.stats = stats
+    if (!this.config.devServer) this.config.devServer = {}
 
-    this.config.devServer = {
-      stats
-    }
+    this.config.stats = stats
+    this.config.devServer.stats = stats
+
+    return this
+  }
+
+  setDevServerPort (port) {
+    if (!this.config.devServer) this.config.devServer = {}
+    this.config.devServer.port = port
 
     return this
   }
@@ -62,6 +69,8 @@ class WebpackConfig {
       path,
       filename
     }))
+
+    return this
   }
 
   setOutputName (outputName) {
@@ -101,6 +110,19 @@ class WebpackConfig {
     this.config.plugins.push(pluginInstance)
 
     return this
+  }
+
+  setMinimizer (minimizer) {
+    if (!this.config.optimization) this.config.optimization = []
+
+    this.config.optimization.minimizer = [...this.config.optimization.minimizer, minimizer]
+  }
+
+  addFavicon (source, title) {
+    this.addPlugin(new FaviconsWebpackPlugin({
+      logo: source,
+      title
+    }))
   }
 
   copyStatic (staticDirectoryPath) {

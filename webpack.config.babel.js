@@ -1,3 +1,5 @@
+// Add log & emoji
+
 import path from 'path'
 import WebpackConfig from './build/WebpackConfig'
 import fs from 'fs'
@@ -8,7 +10,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 
 import SpriteLoaderPlugin from 'svg-sprite-loader/plugin'
-require('babel-register')
+require('@babel/register')
 
 const envs = {
   NODE_ENV: process.env.NODE_ENV || 'development',
@@ -46,8 +48,27 @@ WebpackConfig
   })
   .setStats(akaruConfig.webpackStats)
   .addRule({
+    test: /\.js$/,
+    exclude: /node_modules/,
+    use: {
+      loader: 'babel-loader'
+    }
+  })
+  .addRule({
     test: /.pug$/,
     use: 'pug-loader'
+  })
+  .addRule({
+    test: /\.(png|svg|jpg|gif)$/,
+    use: [
+      'file-loader'
+    ]
+  })
+  .addRule({
+    test: /\.(woff|woff2|eot|ttf|otf)$/,
+    use: [
+      'file-loader'
+    ]
   })
   .addPlugin(new MiniCssExtractPlugin({
     filename: akaruConfig.filenames.styles
@@ -99,6 +120,7 @@ if (WebpackConfig.mode === 'production') {
         'sass-loader'
       ]
     })
+    .addFavicon(paths.base(akaruConfig.favicon), akaruConfig.title)
 }
 
 /*
@@ -117,6 +139,7 @@ if (akaruConfig.zip) {
 
 if (akaruConfig.svgSprite.active) {
   WebpackConfig.addRule({
+    // TODO: que dans un dossier sprite
     test: /\.svg$/,
     use: [{
       loader: 'svg-sprite-loader',
@@ -228,10 +251,10 @@ pages.forEach(pageName => {
   WebpackConfig.addPlugin(new HtmlWebpackPlugin({
     filename,
     template: paths.views('pages', pageName, 'index.pug'),
-    templateParameters: () => ({
+    templateParameters: {
       ...require(paths.views('pages', pageName, 'data.js')),
       ...require(paths.views('base.data.js'))
-    })
+    }
   }))
 })
 

@@ -1,3 +1,2 @@
-let config = {}
-
-export default config
+// TODO: langs et defaultLang
+export default {}
