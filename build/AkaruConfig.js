@@ -17,7 +17,7 @@ const BASE_CONFIG = {
   minifyJs: true,
   svgSprite: {
     active: true,
-    filename: 'views/commons/sprite.svg'
+    filename: '../views/commons/sprite.[hash].svg'
   },
   filenames: {
     js: '[name].js',

@@ -9,8 +9,8 @@ import getFullAkaruConfig from './build/AkaruConfig'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import ExtraWatchWebpackPlugin from 'extra-watch-webpack-plugin'
+import SvgSpriteHtmlWebpackPlugin from 'svg-sprite-html-webpack'
 
-import SpriteLoaderPlugin from 'svg-sprite-loader/plugin'
 require('@babel/register')
 
 const envs = {
@@ -28,6 +28,83 @@ const paths = {
   views: (...args) => path.resolve(pathBase, akaruConfig.paths.views, ...args),
   dist: (...args) => path.resolve(pathBase, akaruConfig.paths.dist, ...args),
   static: (...args) => path.resolve(pathBase, akaruConfig.paths.static, ...args)
+}
+
+const svgoLoader = {
+  loader: 'svgo-loader',
+  options: {
+    plugins: [{
+      cleanupAttrs: true
+    }, {
+      removeDoctype: true
+    }, {
+      removeXMLProcInst: true
+    }, {
+      removeComments: true
+    }, {
+      removeMetadata: true
+    }, {
+      removeTitle: true
+    }, {
+      removeDesc: true
+    }, {
+      removeUselessDefs: true
+    }, {
+      removeEditorsNSData: true
+    }, {
+      removeEmptyAttrs: true
+    }, {
+      removeHiddenElems: true
+    }, {
+      removeEmptyText: true
+    }, {
+      removeEmptyContainers: true
+    }, {
+      removeViewBox: false
+    }, {
+      cleanUpEnableBackground: true
+    }, {
+      convertStyleToAttrs: true
+    }, {
+      convertColors: true
+    }, {
+      convertPathData: true
+    }, {
+      convertTransform: true
+    }, {
+      removeUnknownsAndDefaults: true
+    }, {
+      removeNonInheritableGroupAttrs: true
+    }, {
+      removeUselessStrokeAndFill: true
+    }, {
+      removeUnusedNS: true
+    }, {
+      cleanupIDs: true
+    }, {
+      cleanupNumericValues: true
+    }, {
+      moveElemsAttrsToGroup: true
+    }, {
+      moveGroupAttrsToElems: true
+    }, {
+      collapseGroups: true
+    }, {
+      removeRasterImages: false
+    }, {
+      mergePaths: true
+    }, {
+      convertShapeToPath: true
+    }, {
+      sortAttrs: true
+    }, {
+      transformsWithOnePath: false
+    }, {
+      removeDimensions: true
+    }, {
+      removeAttrs: { attrs: '(stroke|fill)' }
+    }]
+  }
 }
 
 /*
@@ -70,11 +147,16 @@ WebpackConfig
       'file-loader'
     ]
   })
+  .addRule({
+    test: /.svg$/,
+    exclude: /sprite\/.*\.svg$/,
+    use: [svgoLoader]
+  })
   .addPlugin(new MiniCssExtractPlugin({
     filename: akaruConfig.filenames.styles
   }))
   .addPlugin(new ExtraWatchWebpackPlugin({
-    files: [ paths.views('**/data.js') ]
+    files: [paths.views('**/data.js')]
   }))
   .copyStatic(paths.static())
 
@@ -142,94 +224,11 @@ if (akaruConfig.zip) {
 
 if (akaruConfig.svgSprite.active) {
   WebpackConfig.addRule({
-    // TODO: que dans un dossier sprite
-    test: /\.svg$/,
+    test: /sprite\/.*\.svg$/,
     use: [{
-      loader: 'svg-sprite-loader',
-      options: {
-        extract: true,
-        spriteFilename: paths.dist(akaruConfig.svgSprite.filename)
-      }
-    }, {
-      loader: 'svgo-loader',
-      options: {
-        plugins: [{
-          cleanupAttrs: true
-        }, {
-          removeDoctype: true
-        }, {
-          removeXMLProcInst: true
-        }, {
-          removeComments: true
-        }, {
-          removeMetadata: true
-        }, {
-          removeTitle: true
-        }, {
-          removeDesc: true
-        }, {
-          removeUselessDefs: true
-        }, {
-          removeEditorsNSData: true
-        }, {
-          removeEmptyAttrs: true
-        }, {
-          removeHiddenElems: true
-        }, {
-          removeEmptyText: true
-        }, {
-          removeEmptyContainers: true
-        }, {
-          removeViewBox: false
-        }, {
-          cleanUpEnableBackground: true
-        }, {
-          convertStyleToAttrs: true
-        }, {
-          convertColors: true
-        }, {
-          convertPathData: true
-        }, {
-          convertTransform: true
-        }, {
-          removeUnknownsAndDefaults: true
-        }, {
-          removeNonInheritableGroupAttrs: true
-        }, {
-          removeUselessStrokeAndFill: true
-        }, {
-          removeUnusedNS: true
-        }, {
-          cleanupIDs: true
-        }, {
-          cleanupNumericValues: true
-        }, {
-          moveElemsAttrsToGroup: true
-        }, {
-          moveGroupAttrsToElems: true
-        }, {
-          collapseGroups: true
-        }, {
-          removeRasterImages: false
-        }, {
-          mergePaths: true
-        }, {
-          convertShapeToPath: true
-        }, {
-          sortAttrs: true
-        }, {
-          transformsWithOnePath: false
-        }, {
-          removeDimensions: true
-        }, {
-          removeAttrs: { attrs: '(stroke|fill)' }
-        }]
-      }
-    }]
+      loader: SvgSpriteHtmlWebpackPlugin.getLoader()
+    }, svgoLoader]
   })
-    .addPlugin(new SpriteLoaderPlugin({
-      plainSprite: true
-    }))
 }
 
 if (akaruConfig.eslint) {
@@ -256,7 +255,7 @@ akaruConfig.langs.forEach(lang => {
       filename,
       cache: false,
       template: paths.views('pages', pageName, 'index.pug'),
-      templateParameters: () => {
+      templateParameters: (compilation, assets, options) => {
         delete require.cache[paths.views('pages', pageName, 'data.js')]
         delete require.cache[paths.views('data.js')]
 
@@ -276,5 +275,13 @@ akaruConfig.langs.forEach(lang => {
     }))
   })
 })
+
+if (akaruConfig.svgSprite.active) {
+  WebpackConfig.addPlugin(new SvgSpriteHtmlWebpackPlugin({
+    generateSymbolId: (svgFilePath, svgHash, svgContent) => {
+      return path.parse(svgFilePath).name
+    }
+  }))
+}
 
 module.exports = WebpackConfig.getConfig()
