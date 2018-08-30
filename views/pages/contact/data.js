@@ -1,3 +1,6 @@
-module.exports = {
-  test: 'HOLA'
+export default () => {
+  return {
+    pageName: 'contact',
+    title: 'Contact'
+  }
 }

@@ -5,6 +5,13 @@ html(lang="fr")
   include ./commons/head
 
   body(class=pageName)
+
+    //- h1= htmlWebpackPlugin.files
+
+    //- if htmlWebpackPlugin.files.sprites
+    //-   each index, sprite in htmlWebpackPlugin.files.sprites
+    //-     div.svgprite= sprite
+
     include ./commons/header
     main(router-wrapper)
       div(router-view=pageName)
