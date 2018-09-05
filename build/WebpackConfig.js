@@ -5,7 +5,11 @@ import FaviconsWebpackPlugin from 'favicons-webpack-plugin'
 
 class WebpackConfig {
   constructor () {
-    this.config = {}
+    this.config = {
+      resolve: {
+        symlinks: false
+      }
+    }
   }
 
   setMode (mode) {
