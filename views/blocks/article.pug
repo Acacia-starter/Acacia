@@ -1,0 +1,8 @@
+mixin article(datas = {})
+  - datas.classes = (datas.classes || [])
+  -  .concat('article')
+  -  .concat((datas.jsBlockId) ? 'js-block' : '')
+
+  div(id=datas.id, class=datas.classes.join(' '), data-block-id=datas.jsBlockId)
+    h1= datas.title
+    p= datas.text

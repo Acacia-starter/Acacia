@@ -1,6 +1,13 @@
 extends ../../base.pug
+include ../../blocks/article.pug
 
 block content
-  h1= title
+  a(href='/contact') contact
+  +article({
+    jsBlockId: 'article',
+    title: 'Mon premier article',
+    text: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ut quos aut aliquam tempora sit repudiandae fugit tempore a velit quis ipsa molestiae saepe, fugiat dolorem.'
+  })
+  //- h1= pageName
   //- svg
   //-   use(xlink:href='#facebook')
