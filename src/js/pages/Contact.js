@@ -1,14 +1,12 @@
 import { Page } from 'akaru-front'
 
-class Home extends Page {
+class Contact extends Page {
   onEnter () {
-    super.onEnter()
-    console.log('enter home')
-    console.log(this.blocks)
+    console.log('enter contact')
   }
   onLeave () { }
   onEnterCompleted () { }
   onLeaveCompleted () { }
 }
 
-export default Home
+export default Contact

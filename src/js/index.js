@@ -1,7 +1,8 @@
 // TODO: Structure JS
-import Highway from '@dogstudio/highway/dist/es5/highway'
 import '../styles/index.scss'
 import Home from './pages/Home.js'
+import AkaruFront from 'akaru-front'
+import Contact from './pages/Contact'
 
 const requireAll = (r) => {
   r.keys().forEach(r)
@@ -9,11 +10,10 @@ const requireAll = (r) => {
 
 requireAll(require.context('../svg/sprite', true, /\.svg$/))
 
-/* eslint-disable-next-line no-new */
-new Highway.Core({
-  renderers: {
-    home: Home
-  },
-  transitions: {
-  }
-})
+/* eslint-disable-next-line */
+let akaruFront = new AkaruFront()
+  .matchPages({
+    home: Home,
+    contact: Contact
+  })
+  .start()
