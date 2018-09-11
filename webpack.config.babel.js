@@ -3,7 +3,6 @@
 import path from 'path'
 import WebpackConfig from './build/WebpackConfig'
 import fs from 'fs'
-import userAkaruConfig from './akaru.config'
 import getFullAkaruConfig from './build/AkaruConfig'
 // plugins
 import HtmlWebpackPlugin from 'html-webpack-plugin'
@@ -17,7 +16,7 @@ const envs = {
   NODE_ENV: process.env.NODE_ENV || 'development'
 }
 
-const akaruConfig = getFullAkaruConfig(userAkaruConfig, envs.NODE_ENV)
+const akaruConfig = getFullAkaruConfig()
 
 const pathBase = path.resolve(__dirname)
 const paths = {
