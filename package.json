@@ -31,7 +31,7 @@
     }
   ],
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --watch config --quiet --exec 'webpack --config config/index.js'",
+    "dev": "cross-env NODE_ENV=development nodemon --watch config --quiet --exec 'webpack-dev-server --config config/index.js'",
     "generate": "cross-env NODE_ENV=production webpack"
   },
   "dependencies": {

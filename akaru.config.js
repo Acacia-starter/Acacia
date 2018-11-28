@@ -3,5 +3,5 @@ exports.overrideConfig = (baseConfig) => {
 }
 
 exports.overrideWebpackConfig = (webpackConfig) => {
-  // return webpackConfig
+  return webpackConfig
 }
