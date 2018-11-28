@@ -1,4 +1,3 @@
-// TODO: Structure JS
 import '../styles/index.scss'
 import Home from './pages/Home.js'
 import AkaruFront from 'akaru-front'
