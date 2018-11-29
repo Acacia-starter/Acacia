@@ -4,11 +4,10 @@ const { overrideConfig, overrideWebpackConfig } = require('../akaru.config')
 
 const env = process.env.NODE_ENV
 
-let config = new Config()
-config.env = env
+let config = new Config(env)
 
 if (overrideConfig) {
-  config = overrideConfig(config, { env })
+  overrideConfig(config, { env })
 
   if (!config) {
     console.warn('\x1b[31m%s\x1b[0m', 'You need to return your config in overrideConfig method')
@@ -17,10 +16,9 @@ if (overrideConfig) {
 }
 
 let webpackConfig = new WebpackConfig(config)
-webpackConfig.env = env
 
 if (overrideWebpackConfig) {
-  webpackConfig = overrideWebpackConfig(webpackConfig, { config, env })
+  overrideWebpackConfig(webpackConfig, { config, env })
 
   if (!webpackConfig) {
     console.warn('\x1b[31m%s\x1b[0m', 'You need to return your webpackConfig in overrideWebpackConfig method')
@@ -28,4 +26,9 @@ if (overrideWebpackConfig) {
   }
 }
 
-module.exports = webpackConfig.getConfig()
+// console.log('#########')
+// console.log('#########')
+// console.log('#########')
+// console.log(webpackConfig.config)
+// process.exit(0)
+module.exports = webpackConfig.config

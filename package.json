@@ -32,7 +32,8 @@
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --watch config --quiet --exec 'webpack-dev-server --config config/index.js'",
-    "generate": "cross-env NODE_ENV=production webpack"
+    "generate": "cross-env NODE_ENV=production webpack --config config/index.js",
+    "generate:zip": "cross-env NODE_ENV=production ZIP=true webpack --config config/index.js"
   },
   "dependencies": {
     "@dogstudio/highway": "^1.3.9"

@@ -1,75 +1,140 @@
+const path = require('path')
+
+const pathBase = path.resolve(__dirname, '..')
+
 class Config {
-  constructor () {
-    this.baseConfig = {
-      name: 'Akaru starter',
-      langs: ['en', 'fr'],
-      defaultLang: 'fr',
-      index: 'home',
-      dist: 'generate',
-      zip: true,
-      cleanBeforeBuild: true,
-      devtool: false,
-      favicon: 'src/favicon.jpg',
-      js: {
-        minify: true,
-        entries: ['src/js/index.js'],
-        eslint: true,
-        outputName: '[name].[hash].js',
-        sourcemaps: false
-      },
-      styles: {
-        minify: true,
-        postcss: true,
-        entries: [],
-        outputName: '[name].[hash].css',
-        sourcemaps: false
-      },
-      views: {
-        minify: true,
-        path: 'views/',
-        pagesPath: 'views/pages/',
-        blocksPath: 'views/blocks/',
-        partialsPath: 'views/partials/'
-      },
-      datas: {
-        path: 'template/**/data.js',
-        filename: 'data.js'
-      },
-      svg: {
-        svgo: true,
-        sprite: true,
-        svgSpritePath: 'src/svg/sprite/*.svg',
-        spriteFilename: '../views/commons/sprite.[hash].svg'
-      },
-      webpackStats: {
-        assets: true,
-        chunks: false,
-        children: false,
-        version: false,
-        modules: false,
-        builtAt: false,
-        colors: true,
-        hash: false,
-        timings: false,
-        entrypoints: false
-      },
-      envs: {
-        development: {
-          filenames: {
-            js: '[name].js',
-            styles: '[name].css'
-          },
-          cleanBeforeBuild: false,
-          zip: false,
-          devtool: 'cheap-module-eval-source-map',
-          port: '5000',
-          sourcemaps: true,
-          minifyHtml: false,
-          minifyCss: false,
-          minifyJs: false
-        }
-      }
+  constructor (env) {
+    this.env = env
+    this.setConfig()
+
+    if (this.env === 'production') {
+      this.setProductionConfig()
     }
+
+    if (process.env.ZIP || false) {
+      this.setZipConfig()
+    }
+  }
+
+  isProduction () {
+    return this.env === 'production'
+  }
+
+  setConfig () {
+    // Paths
+    this.paths = {
+      base: pathBase,
+      assets: path.resolve(pathBase, 'assets'),
+      js: path.resolve(pathBase, 'assets/js'),
+      styles: path.resolve(pathBase, 'assets/styles'),
+      images: path.resolve(pathBase, 'assets/img'),
+      svg: path.resolve(pathBase, 'assets/svg'),
+      svgSprite: path.resolve(pathBase, 'assets/svg/sprite'),
+      static: path.resolve(pathBase, 'static'),
+      dist: path.resolve(pathBase, 'generate'),
+      pages: path.resolve(pathBase, 'pages'),
+      layouts: path.resolve(pathBase, 'layouts'),
+      components: path.resolve(pathBase, 'components')
+    }
+
+    // Common informations
+    this.name = 'Akaru starter'
+
+    // Langs
+    this.langs = ['en', 'fr']
+    this.defaultLang = 'fr'
+
+    // Pages
+    this.indexPage = 'home'
+
+    // Dev server
+    this.devServer = {
+      port: 5000
+    }
+
+    // Favicon
+    this.generateFavicon = false
+    this.faviconConfig = {
+      logo: path.resolve(this.paths.assets, 'favicon.png'),
+      inject: true,
+      title: 'Akaru Starter'
+    }
+
+    // Js
+    this.js = {
+      minify: false,
+      entriesFile: [path.resolve(this.paths.js, 'index.js')],
+      eslint: true,
+      outputName: '[name].js',
+      outputChunkName: '[name].js',
+      sourcemaps: true
+    }
+    this.devtool = 'cheap-module-eval-source-map'
+    this.externals = []
+    this.alias = {}
+
+    // Styles
+    this.styles = {
+      minify: false,
+      postcss: true,
+      extract: false,
+      entries: [],
+      outputName: '[name].css',
+      sourcemaps: true
+    }
+
+    // Views
+    this.views = {
+      minify: false
+    }
+
+    // SVG
+    this.svg = {
+      svgo: true,
+      sprite: true,
+      svgSpritePath: 'src/svg/sprite/*.svg',
+      spriteFilename: '../views/commons/sprite.[hash].svg'
+    }
+
+    // Webpack stats
+    this.stats = {
+      assets: true,
+      chunks: false,
+      children: false,
+      version: false,
+      modules: false,
+      builtAt: false,
+      colors: true,
+      hash: false,
+      timings: false,
+      entrypoints: false
+    }
+
+    // Zip
+    this.zipDist = false
+    this.zipConfig = {
+      path: this.paths.base,
+      filename: 'generate.zip',
+      pathPrefix: ''
+    }
+  }
+
+  setProductionConfig () {
+    // TODO : true
+    this.generateFavicon = false
+    this.cleanDist = true
+    this.devtool = false
+    this.js.outputName = '[name].[chunkhash].js'
+    this.js.outputChunkName = '[name].[chunkhash].js'
+    this.js.minify = true
+    this.styles.outputName = '[name].[chunkhash].css'
+    this.styles.minify = true
+    this.styles.extract = true
+    this.views.minify = true
+  }
+
+  setZipConfig () {
+    this.zipDist = true
   }
 }
 
