@@ -72,6 +72,7 @@ class Config {
     this.devtool = 'cheap-module-eval-source-map'
     this.externals = []
     this.alias = {}
+    this.provideVariables = {}
 
     // Styles
     this.styles = {

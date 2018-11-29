@@ -1,5 +1,6 @@
 const path = require('path')
 const fs = require('fs')
+const webpack = require('webpack')
 // Custom overrides
 const { overridePages } = require('../akaru.config')
 // Plugins
@@ -120,10 +121,16 @@ class WebpackConfig {
       }]
     })
 
-    // Images
+    // Images and files
     this.rules.push({
-      test: /\.(png|svg|jpg|gif)$/,
+      test: /\.(jpe?g|png|gif|svg|tga|gltf|babylon|mtl|pcb|pcd|prwm|obj|mat|mp3|ogg)$/i,
       use: ['file-loader']
+    })
+
+    // Shaders
+    this.rules.push({
+      test: /\.(vert|frag|glsl|shader|txt)$/i,
+      use: ['raw-loader']
     })
 
     // Fonts
@@ -149,6 +156,11 @@ class WebpackConfig {
         verbose: true
       }))
     }
+
+    this.plugins.push(new webpack.DefinePlugin({
+      ENV: this.userConfig.env,
+      ...this.userConfig.provideVariables
+    }))
 
     // TODO: SVG sprite
 
@@ -189,7 +201,9 @@ class WebpackConfig {
         }
 
         // Construct datas
-        let datas = {}
+        let datas = {
+          pageName: 'Test'
+        }
         // delete require.cache[paths.views('pages', pageName, 'data.js')]
         //   delete require.cache[paths.views('data.js')]
 
