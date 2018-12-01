@@ -3,7 +3,7 @@
 doctype html
 html(lang="fr")
 
-  include ./commons/head
+  include /components/head/index
 
   body(class=bodyClasses.join(' '))
 
@@ -13,8 +13,8 @@ html(lang="fr")
     //-   each index, sprite in htmlWebpackPlugin.files.sprites
     //-     div.svgprite= sprite
 
-    include ./commons/header
+    include /components/header/index
     main(router-wrapper)
       div(router-view=pageName)
         block content
-    include ./commons/footer
+    include /components/footer/index
