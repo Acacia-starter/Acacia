@@ -36,7 +36,8 @@
     "generate:zip": "cross-env NODE_ENV=production ZIP=true webpack --config config/index.js"
   },
   "dependencies": {
-    "@dogstudio/highway": "^1.3.9"
+    "@dogstudio/highway": "^1.3.9",
+    "contentful": "^7.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
