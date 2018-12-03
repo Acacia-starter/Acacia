@@ -2,11 +2,10 @@ extends /layouts/base.pug
 include /components/article/index.pug
 
 block content
-  a(href='/contact') contact
   +article({
     jsBlockId: 'article',
     title: 'Mon premier article',
-    text: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ut quos aut aliquam tempora sit repudiandae fugit tempore a velit quis ipsa molestiae saepe, fugiat dolorem.'
+    text: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit.'
   })
   //- h1= pageName
   //- svg

@@ -157,10 +157,7 @@ class WebpackConfig {
       }))
     }
 
-    this.plugins.push(new webpack.DefinePlugin({
-      ENV: this.userConfig.env,
-      ...this.userConfig.provideVariables
-    }))
+    this.plugins.push(new webpack.DefinePlugin(this.userConfig.provideVariables))
 
     // TODO: SVG sprite
 

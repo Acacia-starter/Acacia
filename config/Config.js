@@ -47,11 +47,6 @@ class Config {
     // Pages
     this.indexPage = 'home'
 
-    // Dev server
-    this.devServer = {
-      port: 5000
-    }
-
     // Favicon
     this.generateFavicon = false
     this.faviconConfig = {
@@ -72,7 +67,9 @@ class Config {
     this.devtool = 'cheap-module-eval-source-map'
     this.externals = []
     this.alias = {}
-    this.provideVariables = {}
+    this.provideVariables = {
+      ENV: JSON.stringify(this.env)
+    }
 
     // Styles
     this.styles = {
@@ -117,6 +114,12 @@ class Config {
       path: this.paths.base,
       filename: 'generate.zip',
       pathPrefix: ''
+    }
+
+    // Dev server
+    this.devServer = {
+      port: 5000,
+      stats: this.stats
     }
   }
 
