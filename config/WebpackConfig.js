@@ -141,6 +141,9 @@ class WebpackConfig {
   }
 
   setPlugins () {
+    // all HTMLWebpackPlugin
+    this.createPages()
+
     // Copy static
     this.plugins.push(new CopyWebpackPlugin([this.userConfig.paths.static]))
 
@@ -168,6 +171,11 @@ class WebpackConfig {
       }))
     }
 
+    // this.plugins.push(new Critters({
+    //   preload: 'swap',
+    //   preloadFonts: true
+    // }))
+
     // Favicon
     if (this.userConfig.generateFavicon) {
       this.plugins.push(new FaviconsWebpackPlugin(this.userConfig.faviconConfig))
@@ -178,8 +186,6 @@ class WebpackConfig {
       files: [path.join(this.userConfig.paths.pages, '**/data.js')]
     }))
 
-    // all HTMLWebpackPlugin
-    this.createPages()
     this.updateConfig()
   }
 
