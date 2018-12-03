@@ -1,9 +1,12 @@
-// import '../styles/index.scss'
-
-const requireAll = (r) => {
-  r.keys().forEach(r)
-}
-
-requireAll(require.context('../../pages', true, /\\index.js$/))
+import '../styles/index.scss'
 
 // requireAll(require.context('../svg/sprite', true, /\.svg$/))
+
+// const requireAll = (r) => {
+//   r.keys().forEach(r)
+// }
+
+import('~p/home/index.js')
+  .then(page => {
+    page.default.start()
+  })
