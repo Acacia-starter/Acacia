@@ -18,26 +18,32 @@ export default class Request {
 
   setCache (cache) {
     this.cache = cache
+    return this
   }
 
   setCredentials (credentials) {
     this.credentials = credentials
+    return this
   }
 
   setMode (mode) {
     this.mode = mode
+    return this
   }
 
   setRedirect (redirect) {
     this.redirect = redirect
+    return this
   }
 
   setReferrer (referrer) {
     this.referrer = referrer
+    return this
   }
 
   setMethod (method) {
     this.method = method
+    return this
   }
 
   setHeaders (headers) {
@@ -45,28 +51,34 @@ export default class Request {
       ...this.headers,
       ...headers
     }
+    return this
   }
 
   setGetParams (getParams) {
     this.getParams = getParams
+    return this
   }
 
   addGetParam (key, value) {
     if (!this.getParams) this.getParams = {}
     this.getParams[key] = value
+    return this
   }
 
   setBodyParams (bodyParams) {
     this.bodyParams = bodyParams
+    return this
   }
 
   addBodyParam (key, value) {
     if (!this.bodyParams) this.bodyParams = {}
     this.bodyParams[key] = value
+    return this
   }
 
   setHeader (key, value) {
     this.header[key] = value
+    return this
   }
 
   fetch () {

@@ -1,6 +1,8 @@
 const path = require('path')
 const fs = require('fs')
 const webpack = require('webpack')
+const glob = require('glob')
+const deepmerge = require('deepmerge')
 // Custom overrides
 const { overridePages } = require('../akaru.config')
 // Plugins
@@ -48,7 +50,7 @@ class WebpackConfig {
           '~s': this.userConfig.paths.styles,
           '~i': this.userConfig.paths.images,
           '~c': this.userConfig.paths.components,
-          '~p': this.userConfig.paths.pages,
+          '~p': this.userConfig.paths.pages(),
           '~l': this.userConfig.paths.layouts
         }, this.userConfig.alias)
       },
@@ -99,13 +101,13 @@ class WebpackConfig {
       })
     }
     styleLoaders.push({
-      loader: 'sass-loader',
+      loader: 'stylus-loader',
       options: {
         sourceMap: this.userConfig.styles.sourcemaps
       }
     })
     this.rules.push({
-      test: /\.(sa|sc|c)ss$/,
+      test: /\.styl$/,
       use: styleLoaders
     })
 
@@ -183,43 +185,55 @@ class WebpackConfig {
 
     // Watch data files
     this.plugins.push(new ExtraWatchWebpackPlugin({
-      files: [path.join(this.userConfig.paths.pages, '**/data.js')]
+      files: [this.userConfig.paths.pages('**/datas.js')]
     }))
 
     this.updateConfig()
   }
 
+  getDatasFromFile (filePath, lang) {
+    let datas = {}
+    if (fs.existsSync(filePath)) {
+      datas = require(filePath)['default']()
+    }
+
+    datas = deepmerge(datas, datas.i18n[lang] || {})
+    delete datas['i18n']
+    return datas
+  }
+
   createPagesInfos () {
-    const pagesFolders = fs.readdirSync(this.userConfig.paths.pages)
+    const pagesFolders = glob.sync('**/', {
+      cwd: this.userConfig.paths.pages()
+    })
 
     this.userConfig.langs.forEach(lang => {
       pagesFolders.forEach(pageName => {
+        // Construct datas
+        let datasFilePath = this.userConfig.paths.pages(pageName, 'datas.js')
+        let datas = this.getDatasFromFile(datasFilePath, lang)
+
         // construct URL
         let url = ''
         if (lang !== this.userConfig.defaultLang) {
           url += `/${lang}`
         }
-        if (pageName !== this.userConfig.indexPage) {
-          url += `/${pageName}`
-        }
-
-        // Construct datas
-        let datas = {
-          pageName: 'Test'
-        }
-        // delete require.cache[paths.views('pages', pageName, 'data.js')]
-        //   delete require.cache[paths.views('data.js')]
-
-        //   let page = require(paths.views('pages', pageName, 'data.js'))['default']()
-        //   let base = require(paths.views('data.js'))['default']()
+        url += `/${(datas.metas && typeof datas.metas.url === 'string') ? datas.metas.url : pageName}`
 
         this.pages.push({
-          source: path.resolve(this.userConfig.paths.pages, pageName, 'index.pug'),
+          source: path.resolve(this.userConfig.paths.pages(), pageName, 'index.pug'),
           url,
-          datas
+          pageDatas: () => {
+            let datasFilePath = this.userConfig.paths.pages(pageName, 'datas.js')
+            delete require.cache[datasFilePath]
+
+            return this.getDatasFromFile(datasFilePath, lang)
+          }
         })
       })
     })
+
+    console.log(this.pages)
 
     if (overridePages) {
       overridePages(this.pages)
@@ -232,7 +246,7 @@ class WebpackConfig {
         filename: path.join(this.userConfig.paths.dist, page.url, 'index.html'),
         cache: false,
         template: page.source,
-        templateParameters: page.datas
+        templateParameters: page.pageDatas
       }))
     })
   }

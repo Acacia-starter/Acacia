@@ -32,7 +32,7 @@ class Config {
       svgSprite: path.resolve(pathBase, 'assets/svg/sprite'),
       static: path.resolve(pathBase, 'static'),
       dist: path.resolve(pathBase, 'generate'),
-      pages: path.resolve(pathBase, 'pages'),
+      pages: (...args) => path.resolve(pathBase, 'pages', ...args),
       layouts: path.resolve(pathBase, 'layouts'),
       components: path.resolve(pathBase, 'components')
     }

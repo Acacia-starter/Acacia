@@ -1,4 +1,5 @@
 - bodyClasses = bodyClasses || []
+- bodyClasses.push(pageName)
 
 doctype html
 html(lang="fr")
@@ -15,8 +16,8 @@ html(lang="fr")
 
     include /components/header/index
 
-    main(router-wrapper)
-      div(router-view=pageName)
+    main
+      div
         block content
 
     include /components/footer/index

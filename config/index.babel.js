@@ -1,3 +1,5 @@
+require('@babel/register')
+
 const Config = require('./Config')
 const WebpackConfig = require('./WebpackConfig')
 const { overrideConfig, overrideWebpackConfig } = require('../akaru.config')
@@ -26,9 +28,4 @@ if (overrideWebpackConfig) {
   }
 }
 
-// console.log('#########')
-// console.log('#########')
-// console.log('#########')
-// console.log(webpackConfig.config)
-// process.exit(0)
 module.exports = webpackConfig.config
