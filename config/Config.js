@@ -39,6 +39,8 @@ class Config {
 
     // Common informations
     this.name = 'Akaru starter'
+    this.port = 5000
+    this.host = '0.0.0.0'
 
     // Langs
     this.langs = ['en', 'fr']
@@ -64,6 +66,10 @@ class Config {
       outputChunkName: '[name].js',
       sourcemaps: true
     }
+    if (this.env === 'development') {
+      this.js.entriesFile.push(`webpack-dev-server/client?http://${this.host}:${this.port}/`)
+    }
+
     this.devtool = 'cheap-module-eval-source-map'
     this.externals = []
     this.alias = {}
@@ -118,7 +124,8 @@ class Config {
 
     // Dev server
     this.devServer = {
-      port: 5000,
+      host: this.host,
+      port: this.port,
       stats: this.stats
     }
   }

@@ -4,7 +4,7 @@ const Config = require('./Config')
 const WebpackConfig = require('./WebpackConfig')
 const { overrideConfig, overrideWebpackConfig } = require('../akaru.config')
 
-const env = process.env.NODE_ENV
+const env = process.env.NODE_ENV || 'production'
 
 let config = new Config(env)
 

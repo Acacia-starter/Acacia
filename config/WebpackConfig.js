@@ -62,6 +62,8 @@ class WebpackConfig {
       devServer: this.userConfig.devServer,
       plugins: this.plugins
     }
+
+    console.log('ha', this.config.mode)
   }
 
   setRules () {
