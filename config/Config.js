@@ -32,13 +32,15 @@ class Config {
       svgSprite: path.resolve(pathBase, 'assets/svg/sprite'),
       static: path.resolve(pathBase, 'static'),
       dist: path.resolve(pathBase, 'generate'),
-      pages: path.resolve(pathBase, 'pages'),
+      pages: (...args) => path.resolve(pathBase, 'pages', ...args),
       layouts: path.resolve(pathBase, 'layouts'),
       components: path.resolve(pathBase, 'components')
     }
 
     // Common informations
     this.name = 'Akaru starter'
+    this.port = 5000
+    this.host = '0.0.0.0'
 
     // Langs
     this.langs = ['en', 'fr']
@@ -64,6 +66,10 @@ class Config {
       outputChunkName: '[name].js',
       sourcemaps: true
     }
+    // if (this.env === 'development') {
+    //   this.js.entriesFile.push(`webpack-dev-server/client?http://${this.host}:${this.port}/`)
+    // }
+
     this.devtool = 'cheap-module-eval-source-map'
     this.externals = []
     this.alias = {}
@@ -118,7 +124,8 @@ class Config {
 
     // Dev server
     this.devServer = {
-      port: 5000,
+      host: this.host,
+      port: this.port,
       stats: this.stats
     }
   }

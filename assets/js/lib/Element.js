@@ -4,9 +4,10 @@ export default class Element {
     this.children = []
     this.parent = null
     this.type = null
-    this.els = null
+    this.$refs = {}
 
     this.getChildren()
+    this.getRefs()
   }
 
   bindMethods () {}
@@ -17,11 +18,17 @@ export default class Element {
 
   removeEvents () {}
 
-  getChildren () {
-    const children = document.getElementsByClassName('js-block')
+  getChildren () {}
 
-    this.children = children.map(el => {
-      return Factory.getBlock(el)
-    })
+  getRefs () {
+    Array.from(document.querySelectorAll('[ref]'))
+      .forEach(el => {
+        let refValue = el.getAttribute('ref')
+        if (this.$refs[refValue]) {
+          this.$refs[refValue] = [this.$refs[refValue], el]
+        } else {
+          this.$refs[refValue] = el
+        }
+      })
   }
 }
