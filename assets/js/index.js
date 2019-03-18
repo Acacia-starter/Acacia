@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 import '../styles/index.styl'
 
 // requireAll(require.context('../svg/sprite', true, /\.svg$/))
@@ -11,7 +12,6 @@ import '../styles/index.styl'
 
 import('~p/home/index.js')
   .then(pageFile => {
-    /* eslint-disable new-cap */
     let page = new pageFile.default()
     page.onEnter()
   })

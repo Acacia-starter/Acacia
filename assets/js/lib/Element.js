@@ -30,6 +30,5 @@ export default class Element {
           this.$refs[refValue] = el
         }
       })
-    console.log(this.$refs)
   }
 }

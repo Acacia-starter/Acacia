@@ -66,9 +66,9 @@ class Config {
       outputChunkName: '[name].js',
       sourcemaps: true
     }
-    if (this.env === 'development') {
-      this.js.entriesFile.push(`webpack-dev-server/client?http://${this.host}:${this.port}/`)
-    }
+    // if (this.env === 'development') {
+    //   this.js.entriesFile.push(`webpack-dev-server/client?http://${this.host}:${this.port}/`)
+    // }
 
     this.devtool = 'cheap-module-eval-source-map'
     this.externals = []

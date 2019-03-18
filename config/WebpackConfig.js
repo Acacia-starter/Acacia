@@ -13,6 +13,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin')
+const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin')
 
 class WebpackConfig {
   constructor (userConfig) {
@@ -89,7 +90,9 @@ class WebpackConfig {
     if (this.userConfig.styles.extract) {
       styleLoaders.push(MiniCssExtractPlugin.loader)
     } else {
-      styleLoaders.push('style-loader')
+      styleLoaders.push({
+        loader: 'style-loader'
+      })
     }
     styleLoaders.push({
       loader: 'css-loader',
@@ -175,6 +178,7 @@ class WebpackConfig {
       }))
     }
 
+    // Critical CSS
     // this.plugins.push(new Critters({
     //   preload: 'swap',
     //   preloadFonts: true
@@ -189,6 +193,9 @@ class WebpackConfig {
     this.plugins.push(new ExtraWatchWebpackPlugin({
       files: [this.userConfig.paths.pages('**/datas.js')]
     }))
+
+    // HMR
+    this.plugins.push(new webpack.HotModuleReplacementPlugin())
 
     this.updateConfig()
   }
@@ -235,8 +242,6 @@ class WebpackConfig {
       })
     })
 
-    console.log(this.pages)
-
     if (overridePages) {
       overridePages(this.pages)
     }
@@ -246,11 +251,14 @@ class WebpackConfig {
     this.pages.forEach(page => {
       this.plugins.push(new HtmlWebpackPlugin({
         filename: path.join(this.userConfig.paths.dist, page.url, 'index.html'),
+        alwaysWriteToDisk: true,
         cache: false,
         template: page.source,
         templateParameters: page.pageDatas
       }))
     })
+
+    this.plugins.push(new HtmlWebpackHarddiskPlugin())
   }
 }
 
