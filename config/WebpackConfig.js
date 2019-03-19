@@ -14,6 +14,7 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin')
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin')
+const Critters = require('critters-webpack-plugin')
 
 class WebpackConfig {
   constructor (userConfig) {
@@ -63,8 +64,6 @@ class WebpackConfig {
       devServer: this.userConfig.devServer,
       plugins: this.plugins
     }
-
-    console.log('ha', this.config.mode)
   }
 
   setRules () {
@@ -72,7 +71,9 @@ class WebpackConfig {
     this.rules.push({
       test: /\.js$/,
       exclude: /node_modules/,
-      use: ['babel-loader']
+      use: [
+        'babel-loader'
+      ]
     })
 
     // Eslint
@@ -80,7 +81,12 @@ class WebpackConfig {
       this.rules.push({
         test: /\.js$/,
         exclude: /node_modules/,
-        use: ['eslint-loader'],
+        use: [{
+          loader: 'eslint-loader',
+          options: {
+            fix: true
+          }
+        }],
         enforce: 'pre'
       })
     }
@@ -179,10 +185,12 @@ class WebpackConfig {
     }
 
     // Critical CSS
-    // this.plugins.push(new Critters({
-    //   preload: 'swap',
-    //   preloadFonts: true
-    // }))
+    if (this.userConfig.isProduction()) {
+      this.plugins.push(new Critters({
+        preload: 'swap',
+        preloadFonts: true
+      }))
+    }
 
     // Favicon
     if (this.userConfig.generateFavicon) {

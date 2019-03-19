@@ -1,13 +1,12 @@
 extends /layouts/base.pug
 include /components/article/index.pug
 
+block var
+  - pageId = 'home'
+
 block content
   +article({
     jsBlockId: 'article',
     title: 'Mon premier article',
     text: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit.'
   })
-  h1= pageName
-
-  p(ref='test') ok
-  p(ref='test') ok

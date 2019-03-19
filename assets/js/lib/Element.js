@@ -5,7 +5,9 @@ export default class Element {
     this.parent = null
     this.type = null
     this.$refs = {}
+  }
 
+  onEnter () {
     this.getChildren()
     this.getRefs()
   }

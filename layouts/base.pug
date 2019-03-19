@@ -1,12 +1,14 @@
 - bodyClasses = bodyClasses || []
 - bodyClasses.push(pageName)
 
+block var
+
 doctype html
 html(lang="fr")
 
   include /components/head/index
 
-  body(class=bodyClasses.join(' '))
+  body(class=bodyClasses.join(' '), data-page-id=pageId)
 
     //- h1= htmlWebpackPlugin.files
 

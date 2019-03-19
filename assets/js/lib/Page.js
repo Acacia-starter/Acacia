@@ -6,5 +6,7 @@ export default class Page extends Element {
     this.type = 'page'
   }
 
-  onEnter () {}
+  onEnter () {
+    super.onEnter()
+  }
 }
