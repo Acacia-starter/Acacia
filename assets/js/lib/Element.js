@@ -23,6 +23,7 @@ export default class Element {
   getChildren () {}
 
   getRefs () {
+    this.$refs = {}
     Array.from(document.querySelectorAll('[ref]'))
       .forEach(el => {
         let refValue = el.getAttribute('ref')
