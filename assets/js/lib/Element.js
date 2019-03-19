@@ -5,7 +5,9 @@ export default class Element {
     this.parent = null
     this.type = null
     this.$refs = {}
+  }
 
+  onEnter () {
     this.getChildren()
     this.getRefs()
   }
@@ -21,6 +23,7 @@ export default class Element {
   getChildren () {}
 
   getRefs () {
+    this.$refs = {}
     Array.from(document.querySelectorAll('[ref]'))
       .forEach(el => {
         let refValue = el.getAttribute('ref')

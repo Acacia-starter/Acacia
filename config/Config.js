@@ -11,13 +11,17 @@ class Config {
       this.setProductionConfig()
     }
 
-    if (process.env.ZIP || false) {
+    if (process.env.ZIP) {
       this.setZipConfig()
     }
   }
 
   isProduction () {
     return this.env === 'production'
+  }
+
+  isDevelopment () {
+    return this.env === 'development'
   }
 
   setConfig () {
@@ -66,9 +70,6 @@ class Config {
       outputChunkName: '[name].js',
       sourcemaps: true
     }
-    // if (this.env === 'development') {
-    //   this.js.entriesFile.push(`webpack-dev-server/client?http://${this.host}:${this.port}/`)
-    // }
 
     this.devtool = 'cheap-module-eval-source-map'
     this.externals = []
@@ -135,10 +136,10 @@ class Config {
     this.generateFavicon = false
     this.cleanDist = true
     this.devtool = false
-    this.js.outputName = '[name].[chunkhash].js'
-    this.js.outputChunkName = '[name].[chunkhash].js'
+    this.js.outputName = '[name].[hash].js'
+    this.js.outputChunkName = '[name].[hash].js'
     this.js.minify = true
-    this.styles.outputName = '[name].[chunkhash].css'
+    this.styles.outputName = '[name].[hash].css'
     this.styles.minify = true
     this.styles.extract = true
     this.views.minify = true
