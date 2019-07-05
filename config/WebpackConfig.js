@@ -56,6 +56,11 @@ class WebpackConfig {
           '~l': this.userConfig.paths.layouts
         }, this.userConfig.alias)
       },
+      resolveLoader: {
+        modules: [path.resolve(__dirname, 'webpack-loaders'), 'node_modules'],
+        extensions: ['.js', '.json'],
+        mainFields: ['loader', 'main']
+      },
       devtool: this.userConfig.devtool,
       context: this.userConfig.paths.base,
       target: 'web',
@@ -131,6 +136,20 @@ class WebpackConfig {
           root: this.userConfig.paths.base,
           pretty: !this.userConfig.views.minify
         }
+      }]
+    })
+
+    // nunjucks
+    this.rules.push({
+      test: /\.html$|njk|nunjucks/,
+      use: ['html-loader', {
+        loader: 'nunjucks-html-loader'
+        // options: {
+        // searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts, this.userConfig.paths.components]
+        // context: {
+        //   username: 'quentin'
+        // }
+        // }
       }]
     })
 
@@ -235,10 +254,15 @@ class WebpackConfig {
         if (lang !== this.userConfig.defaultLang) {
           url += `/${lang}`
         }
-        url += `/${(datas.metas && typeof datas.metas.url === 'string') ? datas.metas.url : pageName}`
+
+        if (datas.metas && typeof datas.metas.url === 'string') {
+          url += `/${datas.metas.url}`
+        } else if (pageName !== this.userConfig.indexPage) {
+          url += `/${pageName}`
+        }
 
         this.pages.push({
-          source: path.resolve(this.userConfig.paths.pages(), pageName, 'index.pug'),
+          source: path.resolve(this.userConfig.paths.pages(), pageName, 'index.njk'),
           url,
           pageDatas: () => {
             let datasFilePath = this.userConfig.paths.pages(pageName, 'datas.js')
@@ -257,12 +281,16 @@ class WebpackConfig {
 
   createPages () {
     this.pages.forEach(page => {
+      let t = JSON.stringify({
+        searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts, this.userConfig.paths.components],
+        context: page.pageDatas()
+      })
+
       this.plugins.push(new HtmlWebpackPlugin({
         filename: path.join(this.userConfig.paths.dist, page.url, 'index.html'),
         alwaysWriteToDisk: true,
         cache: false,
-        template: page.source,
-        templateParameters: page.pageDatas
+        template: '!!html-loader!nunjucks-html-loader?' + t + '!' + page.source
       }))
     })
 

@@ -12,7 +12,7 @@ class Config {
     }
 
     if (process.env.ZIP) {
-      this.setZipConfig()
+      this.zipDist = true
     }
   }
 
@@ -132,7 +132,6 @@ class Config {
   }
 
   setProductionConfig () {
-    // TODO : true
     this.generateFavicon = false
     this.cleanDist = true
     this.devtool = false
@@ -143,10 +142,6 @@ class Config {
     this.styles.minify = true
     this.styles.extract = true
     this.views.minify = true
-  }
-
-  setZipConfig () {
-    this.zipDist = true
   }
 }
 
