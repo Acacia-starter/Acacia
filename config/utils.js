@@ -26,13 +26,12 @@ const getUserConfig = () => {
 
 const getWebpackConfig = (userConfig = null) => {
   const WebpackConfig = require('./WebpackConfig')
-  const env = process.env.NODE_ENV || 'production'
   if (!userConfig) userConfig = getUserConfig()
 
   let webpackConfig = new WebpackConfig(userConfig)
 
   if (overrideWebpackConfig) {
-    webpackConfig = overrideWebpackConfig(webpackConfig, { userConfig, env })
+    webpackConfig = overrideWebpackConfig(webpackConfig, { userConfig })
 
     if (!webpackConfig) {
       console.warn('\x1b[31m%s\x1b[0m', 'You need to return your webpackConfig in overrideWebpackConfig method')
