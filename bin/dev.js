@@ -1,9 +1,9 @@
 const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
-const config = require('../config/index.babel')
+const webpackConfig = require('../config/utils').getWebpackConfig()
 const path = require('path')
 
-const { host, port, stats } = config.devServer
+const { host, port, stats } = webpackConfig.config.devServer
 
 const options = {
   stats,
@@ -14,8 +14,8 @@ const options = {
   watchContentBase: true
 }
 
-WebpackDevServer.addDevServerEntrypoints(config, options)
-const compiler = webpack(config)
+WebpackDevServer.addDevServerEntrypoints(webpackConfig.config, options)
+const compiler = webpack(webpackConfig.config)
 const server = new WebpackDevServer(compiler, options)
 
 server.listen(port, host, function (err) {

@@ -1,10 +1,7 @@
 const path = require('path')
-const fs = require('fs')
 const webpack = require('webpack')
-const glob = require('glob')
-const deepmerge = require('deepmerge')
-// Custom overrides
-const { overridePages } = require('../akaru.config')
+const { getPages } = require('./utils')
+
 // Plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ZipWebpackPlugin = require('zip-webpack-plugin')
@@ -19,20 +16,17 @@ const Critters = require('critters-webpack-plugin')
 class WebpackConfig {
   constructor (userConfig) {
     this.userConfig = userConfig
-    this.config = {}
 
-    this.pages = []
+    this.pages = getPages(userConfig)
     this.rules = []
     this.plugins = []
 
-    this.createPagesInfos()
     this.setRules()
     this.setPlugins()
-    this.updateConfig()
   }
 
-  updateConfig () {
-    this.config = {
+  get config () {
+    return {
       mode: this.userConfig.env,
       entry: this.userConfig.js.entriesFile,
       output: {
@@ -223,67 +217,13 @@ class WebpackConfig {
 
     // HMR
     this.plugins.push(new webpack.HotModuleReplacementPlugin())
-
-    this.updateConfig()
-  }
-
-  getDatasFromFile (filePath, lang) {
-    let datas = {}
-    if (fs.existsSync(filePath)) {
-      datas = require(filePath)['default']()
-    }
-
-    datas = deepmerge(datas, datas.i18n[lang] || {})
-    delete datas['i18n']
-    return datas
-  }
-
-  createPagesInfos () {
-    const pagesFolders = glob.sync('**/', {
-      cwd: this.userConfig.paths.pages()
-    })
-
-    this.userConfig.langs.forEach(lang => {
-      pagesFolders.forEach(pageName => {
-        // Construct datas
-        let datasFilePath = this.userConfig.paths.pages(pageName, 'datas.js')
-        let datas = this.getDatasFromFile(datasFilePath, lang)
-
-        // construct URL
-        let url = ''
-        if (lang !== this.userConfig.defaultLang) {
-          url += `/${lang}`
-        }
-
-        if (datas.metas && typeof datas.metas.url === 'string') {
-          url += `/${datas.metas.url}`
-        } else if (pageName !== this.userConfig.indexPage) {
-          url += `/${pageName}`
-        }
-
-        this.pages.push({
-          source: path.resolve(this.userConfig.paths.pages(), pageName, 'index.njk'),
-          url,
-          pageDatas: () => {
-            let datasFilePath = this.userConfig.paths.pages(pageName, 'datas.js')
-            delete require.cache[datasFilePath]
-
-            return this.getDatasFromFile(datasFilePath, lang)
-          }
-        })
-      })
-    })
-
-    if (overridePages) {
-      overridePages(this.pages)
-    }
   }
 
   createPages () {
     this.pages.forEach(page => {
       let t = JSON.stringify({
         searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts, this.userConfig.paths.components],
-        context: page.pageDatas()
+        context: page.getPageDatas()
       })
 
       this.plugins.push(new HtmlWebpackPlugin({
