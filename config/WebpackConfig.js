@@ -47,7 +47,7 @@ class WebpackConfig {
           '~i': this.userConfig.paths.images,
           '~c': this.userConfig.paths.components,
           '~p': this.userConfig.paths.pages(),
-          '~l': this.userConfig.paths.layouts
+          '~l': this.userConfig.paths.layouts()
         }, this.userConfig.alias)
       },
       resolveLoader: {
@@ -138,12 +138,6 @@ class WebpackConfig {
       test: /\.html$|njk|nunjucks/,
       use: ['html-loader', {
         loader: 'nunjucks-html-loader'
-        // options: {
-        // searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts, this.userConfig.paths.components]
-        // context: {
-        //   username: 'quentin'
-        // }
-        // }
       }]
     })
 
@@ -222,8 +216,8 @@ class WebpackConfig {
   createPages () {
     this.pages.forEach(page => {
       let t = JSON.stringify({
-        searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts, this.userConfig.paths.components],
-        context: page.getPageDatas()
+        searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts(), this.userConfig.paths.components],
+        context: (page.getPageDatas) ? page.getPageDatas() : {}
       })
 
       this.plugins.push(new HtmlWebpackPlugin({

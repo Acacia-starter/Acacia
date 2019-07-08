@@ -2,7 +2,6 @@ require('@babel/register')
 
 const { overrideConfig, overrideWebpackConfig, overridePages } = require('../akaru.config')
 const glob = require('glob')
-const path = require('path')
 const fs = require('fs')
 const defu = require('defu')
 
@@ -13,7 +12,7 @@ const getUserConfig = () => {
   let config = new Config(env)
 
   if (overrideConfig) {
-    config = overrideConfig(config, { env })
+    config = overrideConfig(config)
 
     if (!config) {
       console.warn('\x1b[31m%s\x1b[0m', 'You need to return your config in overrideConfig method')
@@ -48,7 +47,7 @@ const getDatasFromFile = (filePath, lang) => {
     datas = require(filePath)['default']()
   }
 
-  datas = defu(datas, datas.i18n[lang] || {})
+  datas = defu(datas, (datas.i18n && datas.i18n[lang]) || {})
   delete datas['i18n']
   return datas
 }
@@ -65,8 +64,12 @@ const getPages = (userConfig = null) => {
   userConfig.langs.forEach(lang => {
     pagesFolders.forEach(pageName => {
       // Construct datas
-      let datasFilePath = userConfig.paths.pages(pageName, 'datas.js')
-      let datas = getDatasFromFile(datasFilePath, lang)
+      let pageDatasFilePath = userConfig.paths.pages(pageName, 'datas.js')
+      let pageDatas = getDatasFromFile(pageDatasFilePath, lang)
+      let generalDatasFilePath = userConfig.paths.layouts('datas.js')
+      let generalDatas = getDatasFromFile(generalDatasFilePath, lang)
+
+      let datas = defu(generalDatas, pageDatas)
 
       // construct URL
       let url = ''
@@ -76,33 +79,60 @@ const getPages = (userConfig = null) => {
 
       if (datas.metas && typeof datas.metas.url === 'string') {
         url += `/${datas.metas.url}`
-      } else if (pageName !== this.userConfig.indexPage) {
+      } else if (pageName !== userConfig.indexPage) {
         url += `/${pageName}`
       }
 
       pages.push({
-        source: path.resolve(userConfig.paths.pages(), pageName, 'index.njk'),
-        lang,
-        metas: datas.metas,
+        source: userConfig.paths.pages(pageName, 'index.njk'),
         url,
         getPageDatas: () => {
-          let datasFilePath = userConfig.paths.pages(pageName, 'datas.js')
-          delete require.cache[datasFilePath]
+          let pageDatasFilePath = userConfig.paths.pages(pageName, 'datas.js')
+          let generalDatasFilePath = userConfig.paths.layouts('datas.js')
+          delete require.cache[pageDatasFilePath]
+          delete require.cache[generalDatasFilePath]
 
-          return getDatasFromFile(datasFilePath, lang)
+          return defu(getDatasFromFile(generalDatasFilePath, lang), getDatasFromFile(pageDatasFilePath, lang))
         }
       })
     })
   })
 
   if (overridePages) {
-    pages = overridePages(pages)
+    pages = overridePages(pages, { userConfig })
+
+    // Check all pages are correct
+    pages.forEach(page => {
+      if (!page.url || !(typeof page.url === 'string')) {
+        console.warn('\x1b[31m%s\x1b[0m', `This page has an incorrect url parameter`, page)
+        process.exit(0)
+      }
+
+      if (!page.source || !(typeof page.source === 'string')) {
+        console.warn('\x1b[31m%s\x1b[0m', `This page has an incorrect source parameter`, page)
+        process.exit(0)
+      }
+    })
 
     if (!Array.isArray(pages)) {
       console.warn('\x1b[31m%s\x1b[0m', 'You need to return your pages in overridePages method')
       process.exit(0)
     }
   }
+
+  // Check duplicate urls
+  pages.forEach(page => {
+    pages.forEach(otherPage => {
+      if (page === otherPage) return
+
+      if (page.url === otherPage.url) {
+        console.warn('\x1b[31m%s\x1b[0m', 'These pages have the same url')
+        console.log(page)
+        console.log(otherPage)
+        process.exit(0)
+      }
+    })
+  })
 
   return pages
 }
