@@ -1,4 +1,5 @@
-module.exports = [{
-  name: 'test',
-  callback: v => v + 'from filter'
-}]
+module.exports = (nunjEnv) => {
+  nunjEnv.addFilter('merge', () => {
+    console.log('test')
+  })
+}

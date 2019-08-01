@@ -2,7 +2,7 @@ var utils = require('loader-utils')
 var fs = require('fs')
 var path = require('path')
 var nunjucks = require('nunjucks')
-const filters = require('../../nunjuckFilters')
+const addFilters = require('../../nunjuckFilters')
 
 var NunjucksLoader = nunjucks.Loader.extend({
   // Based off of the Nunjucks 'FileSystemLoader'
@@ -63,9 +63,7 @@ module.exports = function (content) {
 
   var nunjEnv = new nunjucks.Environment(loader)
 
-  filters.forEach(f => {
-    nunjEnv.addFilter(f.name, f.callback)
-  })
+  addFilters(nunjEnv)
   nunjucks.configure(null, { watch: false })
 
   var template = nunjucks.compile(content, nunjEnv)
