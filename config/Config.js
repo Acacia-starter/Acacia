@@ -37,7 +37,7 @@ class Config {
       static: path.resolve(pathBase, 'static'),
       dist: path.resolve(pathBase, 'generate'),
       pages: (...args) => path.resolve(pathBase, 'pages', ...args),
-      layouts: path.resolve(pathBase, 'layouts'),
+      layouts: (...args) => path.resolve(pathBase, 'layouts', ...args),
       components: path.resolve(pathBase, 'components')
     }
 

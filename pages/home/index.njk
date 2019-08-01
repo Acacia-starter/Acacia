@@ -1,7 +1,7 @@
 {% extends "base.njk" %}
 
 {% block content %}
-<h1>ma var : {{ pageName }}</h1>
+<h1>ma var : {{ pageName | test }}</h1>
 
 {% include "article/index.njk" with {
   test: 'ok'
