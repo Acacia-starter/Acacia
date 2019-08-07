@@ -36,7 +36,9 @@
     "generate:zip": "cross-env NODE_ENV=production ZIP=true node bin/generate.js",
     "serve": "serve ./generate"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@qneyraud/q-dom": "^1.2.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",

@@ -743,6 +743,11 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@qneyraud/q-dom@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@qneyraud/q-dom/-/q-dom-1.2.1.tgz#d79612ebcd9519e0f6fb3ba7d6b5ded1986d7bfe"
+  integrity sha512-ZLyz1OJLTXo77gaTsi9YCH6+Nh+Ivq/2SbhIGSDSKdZMZ76TSQd5VNUqr0X88soKT2WZnREWWq5OIERWbwLfdA==
+
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"

@@ -1,0 +1,27 @@
+{% set allclasses = ['component'].concat(component.classes).concat(classes).concat(id ~ 'Component') %}
+
+{% set styleVarsString = '' %}
+{% for index, value in {}|merge(component.styleVars)|merge(stylesVars) %}
+  {% set styleVarsString = styleVarsString + '--' + index + ':' + value + ';' %}
+{% endfor %}
+
+{% set datasetString = '' %}
+{% for index, value in {}|merge(component.datasets)|merge(datasets) %}
+  {% set datasetString = datasetString + ' data-' + index + '=' + value %}
+{% endfor %}
+
+{% set attrString = '' %}
+{% for index, value in {}|merge(component.attributes)|merge(attributes) %}
+  {% set attrString = attrString + index + '=' + value %}
+{% endfor %}
+
+<div
+  class="{{ allclasses|join(' ') }}"
+  data-component="{{ id }}"
+  {% if component.id %}id="{{ component.id }}"{% endif %}
+  {% if styleVarsString|length %}style="{{ styleVarsString }}"{% endif %}
+  {% if datasetString|length %}{{ datasetString }}{% endif %}
+  {% if attrString|length %}{{ attrString }}{% endif %}>
+    {# Content #}
+    {% block componentcontent %}{% endblock %}
+</div>

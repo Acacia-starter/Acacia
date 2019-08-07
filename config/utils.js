@@ -58,8 +58,10 @@ const getPages = (userConfig = null) => {
   let pages = []
 
   const pagesFolders = glob.sync('**/', {
-    cwd: userConfig.paths.pages()
+    cwd: userConfig.paths.pages(),
+    mark: false
   })
+    .map(directoryName => directoryName.replace(/\/$/, ''))
 
   userConfig.langs.forEach(lang => {
     pagesFolders.forEach(pageName => {
@@ -84,7 +86,7 @@ const getPages = (userConfig = null) => {
       }
 
       pages.push({
-        source: userConfig.paths.pages(pageName, 'index.njk'),
+        source: userConfig.paths.pages(pageName, 'index.html'),
         url,
         getPageDatas: () => {
           let pageDatasFilePath = userConfig.paths.pages(pageName, 'datas.js')
@@ -103,7 +105,7 @@ const getPages = (userConfig = null) => {
 
     // Check all pages are correct
     pages.forEach(page => {
-      if (!page.url || !(typeof page.url === 'string')) {
+      if (!(typeof page.url === 'string')) {
         console.warn('\x1b[31m%s\x1b[0m', `This page has an incorrect url parameter`, page)
         process.exit(0)
       }

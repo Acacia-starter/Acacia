@@ -1,0 +1,25 @@
+{% extends "component.html" %}
+{% set id = 'image' %}
+
+{% set props = props|merge({
+  placement: 'cover',
+  position: 'center center',
+  source: 'http://placecorgi.com/1200/800',
+  alt: 'Image non chargée',
+  sources: ['http://placecorgi.com/1200/800']
+}) %}
+
+{% set classes = [props.placement] %}
+{% set stylesVars = {
+  placement: props.placement,
+  position: props.position
+} %}
+
+{% block componentcontent %}
+  <picture>
+    {% for source in props.sources %}
+      <source srcset="{{ source }}" alt="{{ props.alt }}">
+    {% endfor %}
+    <img src="{{ props.source }}" alt="{{ props.alt }}">
+  </picture>
+{% endblock %}

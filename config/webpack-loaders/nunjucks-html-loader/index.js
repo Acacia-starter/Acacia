@@ -8,7 +8,7 @@ var NunjucksLoader = nunjucks.Loader.extend({
   // Based off of the Nunjucks 'FileSystemLoader'
 
   init: function (searchPaths, sourceFoundCallback) {
-    	this.sourceFoundCallback = sourceFoundCallback
+    this.sourceFoundCallback = sourceFoundCallback
     if (searchPaths) {
       searchPaths = Array.isArray(searchPaths) ? searchPaths : [searchPaths]
       // For windows, convert to forward slashes
@@ -19,7 +19,7 @@ var NunjucksLoader = nunjucks.Loader.extend({
   },
 
   getSource: function (name) {
-    	var fullpath = null
+    var fullpath = null
     var paths = this.searchPaths
 
     for (var i = 0; i < paths.length; i++) {
@@ -63,11 +63,15 @@ module.exports = function (content) {
 
   var nunjEnv = new nunjucks.Environment(loader)
 
-  addFilters(nunjEnv)
+  // addFilters(nunjEnv)
   nunjucks.configure(null, { watch: false })
 
   var template = nunjucks.compile(content, nunjEnv)
-  var html = template.render(nunjucksContext)
 
-  callback(null, html)
+  template.render(nunjucksContext, (err, html) => {
+    // TODO: style nunjucks error
+    if (err) console.log(err.message)
+
+    callback(null, html)
+  })
 }

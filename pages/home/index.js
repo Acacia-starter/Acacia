@@ -1,7 +1,8 @@
-import Page from '~j/lib/Page.js'
+import { Page } from '~j/lib/index.js'
 
 export default class Home extends Page {
-  onEnter () {
-    super.onEnter()
+  onEnterView () {
+    super.onEnterView()
+    console.log('home in view')
   }
 }

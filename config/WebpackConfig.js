@@ -136,9 +136,11 @@ class WebpackConfig {
     // nunjucks
     this.rules.push({
       test: /\.html$|njk|nunjucks/,
-      use: ['html-loader', {
-        loader: 'nunjucks-html-loader'
-      }]
+      use: [
+        'html-loader',
+        {
+          loader: 'nunjucks-html-loader'
+        }]
     })
 
     // Images and files

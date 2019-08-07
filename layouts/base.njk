@@ -4,13 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  {% include "head/index.njk" %}
+  <title>{{ metas.title }}</title>
 </head>
 <body>
-  {% include "header/index.njk" %}
 
-  {% block content %}{% endblock %}
-
-  {% include "footer/index.njk" %}
+  <div id="root">
+    {% block content %}{% endblock %}
+  </div>
 </body>
 </html>

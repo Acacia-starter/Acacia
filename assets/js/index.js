@@ -1,17 +1,42 @@
-import '../styles/index.styl'
 import Factory from './lib/Factory'
+import { gebi, gebc } from '@qneyraud/q-dom'
 
-// requireAll(require.context('../svg/sprite', true, /\.svg$/))
-// const requireAll = (r) => {
-//   r.keys().forEach(r)
-// }
+// pages
+import Home from '../../pages/home/index.js'
 
-const pages = {
-  home: import('~p/home/index.js')
+// components
+
+// style
+require('~s/index.styl')
+
+Factory
+  .matchPages({
+    home: Home
+  })
+  .matchComponents({})
+
+window.onload = () => {
+  const root = gebi('root')
+
+  if (root) {
+    const page = gebc(root, 'page')
+
+    if (page) {
+      Factory.createPage(gebc(root, 'page'), {
+        root
+      }).init()
+    }
+  }
 }
 
-Factory.matchPages(pages)
+// debug overflow x
+// var docWidth = document.documentElement.offsetWidth;
 
-const pageId = document.body.dataset.pageId
-Factory.getPage(pageId)
-  .then(page => page.onEnter())
+// [].forEach.call(
+//   document.querySelectorAll('*'),
+//   function (el) {
+//     if (el.offsetWidth > docWidth) {
+//       console.log(el, el.offsetWidth)
+//     }
+//   }
+// )

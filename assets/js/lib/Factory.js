@@ -1,5 +1,4 @@
-/* eslint-disable new-cap */
-import Page from './Page'
+import { Page, Component } from './index'
 
 class Factory {
   constructor () {
@@ -7,31 +6,76 @@ class Factory {
     this.components = {}
   }
 
-  matchPages (pages) {
-    this.pages = pages
+  matchComponent (key, classRef) {
+    this.components[key] = classRef
 
     return this
   }
 
   matchComponents (components) {
-    this.components = components
+    this.components = {
+      ...this.components,
+      ...components
+    }
 
     return this
   }
 
-  getPage (pageId) {
-    let page = this.pages[pageId] || Page
+  matchPage (key, classRef) {
+    this.pages[key] = classRef
 
-    if (page instanceof Promise) {
-      return page
-        .then(pageClass => new pageClass.default())
-    } else if (page instanceof Page) {
-      return Promise.resolve(page)
-    } else if (page.prototype instanceof Page || page === Page) {
-      return Promise.resolve(new page())
+    return this
+  }
+
+  matchPages (pages) {
+    this.pages = {
+      ...this.pages,
+      ...pages
     }
 
-    console.log('test')
+    return this
+  }
+
+  createComponent (el, datas) {
+    const componentId = el.dataset && el.dataset.component
+    let componentInstance
+
+    if (!this.components[componentId]) {
+      componentInstance = new Component({
+        ...datas,
+        el,
+        id: componentId
+      })
+    } else {
+      componentInstance = new this.components[componentId]({
+        ...datas,
+        el,
+        id: componentId
+      })
+    }
+
+    return componentInstance
+  }
+
+  createPage (el, datas) {
+    const pageId = el.dataset && el.dataset.page
+    let pageInstance
+
+    if (!this.pages[pageId]) {
+      pageInstance = new Page({
+        ...datas,
+        el,
+        id: pageId
+      })
+    } else {
+      pageInstance = new this.pages[pageId]({
+        ...datas,
+        el,
+        id: pageId
+      })
+    }
+
+    return pageInstance
   }
 }
 

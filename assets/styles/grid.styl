@@ -1,0 +1,74 @@
+@import './breakpoints'
+
+.container
+  position relative
+  padding-left 15px
+  padding-right 15px
+  margin-right auto
+  margin-left auto
+  width 100%
+  max-width base-width
+
+  +mobile-up()
+    max-width mobile-width
+
+  +tablet-up()
+    max-width tablet-width
+
+  +desktop-up()
+    max-width desktop-width
+
+  +large-up()
+    max-width large-width
+
+  +xlarge-up()
+    max-width xlarge-width
+
+  &.fh
+    height 100%
+
+row()
+  display flex
+  flex-wrap wrap
+  align-items flex-start
+  margin-left -1 * 15px
+  margin-right -1 * 15px
+
+  +desktop-up()
+    margin-left 0
+    margin-right 0
+
+
+column()
+  position relative
+  width 100%
+  min-height 1px
+  padding-right gutter-width
+  padding-left gutter-width
+  flex 0 0 100%
+
+size(size)
+  column()
+  flex 0 0 percentage(size/columns)
+  max-width percentage(size/columns)
+
+push(size)
+  margin-left percentage(size/columns)
+
+.row
+  row()
+
+  &.fh
+    height 100%
+
+  &.center
+    justify-content center
+
+  &.end
+    justify-content flex-end
+
+  &.v-center
+    align-items center
+
+.column
+  column()
