@@ -7,7 +7,7 @@ class Config {
     this.env = env
     this.setConfig()
 
-    if (this.env === 'production') {
+    if (this.isProduction()) {
       this.setProductionConfig()
     }
 
@@ -28,17 +28,17 @@ class Config {
     // Paths
     this.paths = {
       base: pathBase,
-      assets: path.resolve(pathBase, 'assets'),
-      js: path.resolve(pathBase, 'assets/js'),
-      styles: path.resolve(pathBase, 'assets/styles'),
-      images: path.resolve(pathBase, 'assets/img'),
-      svg: path.resolve(pathBase, 'assets/svg'),
-      svgSprite: path.resolve(pathBase, 'assets/svg/sprite'),
-      static: path.resolve(pathBase, 'static'),
-      dist: path.resolve(pathBase, 'generate'),
+      assets: (...args) => path.resolve(pathBase, 'assets', ...args),
+      js: (...args) => path.resolve(pathBase, 'assets/js', ...args),
+      styles: (...args) => path.resolve(pathBase, 'assets/styles', ...args),
+      images: (...args) => path.resolve(pathBase, 'assets/img', ...args),
+      svg: (...args) => path.resolve(pathBase, 'assets/svg', ...args),
+      svgSprite: (...args) => path.resolve(pathBase, 'assets/svg/sprite', ...args),
+      static: (...args) => path.resolve(pathBase, 'static', ...args),
+      dist: (...args) => path.resolve(pathBase, 'generate', ...args),
       pages: (...args) => path.resolve(pathBase, 'pages', ...args),
       layouts: (...args) => path.resolve(pathBase, 'layouts', ...args),
-      components: path.resolve(pathBase, 'components')
+      components: (...args) => path.resolve(pathBase, 'components', ...args)
     }
 
     // Common informations
@@ -56,7 +56,7 @@ class Config {
     // Favicon
     this.generateFavicon = false
     this.faviconConfig = {
-      logo: path.resolve(this.paths.assets, 'favicon.png'),
+      logo: this.paths.assets('favicon.png'),
       inject: true,
       title: 'Akaru Starter'
     }
@@ -64,7 +64,7 @@ class Config {
     // Js
     this.js = {
       minify: false,
-      entriesFile: [path.resolve(this.paths.js, 'index.js')],
+      entriesFile: [this.paths.js('index.js')],
       eslint: true,
       outputName: '[name].js',
       outputChunkName: '[name].js',

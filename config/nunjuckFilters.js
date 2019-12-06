@@ -1,6 +1,6 @@
 const defu = require('defu')
 
-module.exports = (nunjEnv) => {
+module.exports = nunjEnv => {
   nunjEnv.addFilter('setAttribute', (obj, key, value) => {
     obj[key] = value
     return obj

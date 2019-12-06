@@ -30,7 +30,7 @@ class WebpackConfig {
       mode: this.userConfig.env,
       entry: this.userConfig.js.entriesFile,
       output: {
-        path: this.userConfig.paths.dist,
+        path: this.userConfig.paths.dist(),
         filename: this.userConfig.js.outputName,
         chunkFilename: this.userConfig.js.outputChunkName
       },
@@ -42,19 +42,19 @@ class WebpackConfig {
         extensions: ['.js', '.json', '.scss', '.css'],
         alias: Object.assign({}, {
           '~': this.userConfig.paths.base,
-          '~j': this.userConfig.paths.js,
-          '~s': this.userConfig.paths.styles,
-          '~i': this.userConfig.paths.images,
-          '~c': this.userConfig.paths.components,
+          '~j': this.userConfig.paths.js(),
+          '~s': this.userConfig.paths.styles(),
+          '~i': this.userConfig.paths.images(),
+          '~c': this.userConfig.paths.components(),
           '~p': this.userConfig.paths.pages(),
           '~l': this.userConfig.paths.layouts()
         }, this.userConfig.alias)
       },
-      resolveLoader: {
-        modules: [path.resolve(__dirname, 'webpack-loaders'), 'node_modules'],
-        extensions: ['.js', '.json'],
-        mainFields: ['loader', 'main']
-      },
+      // resolveLoader: {
+      //   modules: [path.resolve(__dirname, 'webpack-loaders'), 'node_modules'],
+      //   extensions: ['.js', '.json'],
+      //   mainFields: ['loader', 'main']
+      // },
       devtool: this.userConfig.devtool,
       context: this.userConfig.paths.base,
       target: 'web',
@@ -122,24 +122,26 @@ class WebpackConfig {
     })
 
     // Pug
-    this.rules.push({
-      test: /.pug$/,
-      use: [{
-        loader: 'pug-loader',
-        options: {
-          root: this.userConfig.paths.base,
-          pretty: !this.userConfig.views.minify
-        }
-      }]
-    })
+    // this.rules.push({
+    //   test: /.pug$/,
+    //   use: [{
+    //     loader: 'pug-loader',
+    //     options: {
+    //       root: this.userConfig.paths.base,
+    //       pretty: !this.userConfig.views.minify
+    //     }
+    //   }]
+    // })
 
     // nunjucks
     this.rules.push({
       test: /\.html$|njk|nunjucks/,
       use: [
-        'html-loader',
         {
-          loader: 'nunjucks-html-loader'
+          loader: 'simple-nunjucks-loader',
+          options: {
+            searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts(), this.userConfig.paths.components()]
+          }
         }]
     })
 
@@ -167,7 +169,7 @@ class WebpackConfig {
     this.createPages()
 
     // Copy static
-    this.plugins.push(new CopyWebpackPlugin([this.userConfig.paths.static]))
+    this.plugins.push(new CopyWebpackPlugin([this.userConfig.paths.static()]))
 
     // Zip dist
     if (this.userConfig.zipDist) {
@@ -176,7 +178,7 @@ class WebpackConfig {
 
     // Clean dist
     if (this.userConfig.cleanDist) {
-      this.plugins.push(new CleanWebpackPlugin([this.userConfig.paths.dist], {
+      this.plugins.push(new CleanWebpackPlugin([this.userConfig.paths.dist()], {
         root: this.userConfig.paths.base,
         verbose: true
       }))
@@ -187,19 +189,19 @@ class WebpackConfig {
     // TODO: SVG sprite
 
     // Styles
-    if (this.userConfig.styles.extract) {
-      this.plugins.push(new MiniCssExtractPlugin({
-        filename: this.userConfig.styles.outputName
-      }))
-    }
+    // if (this.userConfig.styles.extract) {
+    //   this.plugins.push(new MiniCssExtractPlugin({
+    //     filename: this.userConfig.styles.outputName
+    //   }))
+    // }
 
     // Critical CSS
-    if (this.userConfig.isProduction()) {
-      this.plugins.push(new Critters({
-        preload: 'swap',
-        preloadFonts: true
-      }))
-    }
+    // if (this.userConfig.isProduction()) {
+    //   this.plugins.push(new Critters({
+    //     preload: 'swap',
+    //     preloadFonts: true
+    //   }))
+    // }
 
     // Favicon
     if (this.userConfig.generateFavicon) {
@@ -207,26 +209,26 @@ class WebpackConfig {
     }
 
     // Watch data files
-    this.plugins.push(new ExtraWatchWebpackPlugin({
-      files: [this.userConfig.paths.pages('**/datas.js')]
-    }))
+    // this.plugins.push(new ExtraWatchWebpackPlugin({
+    //   files: [this.userConfig.paths.pages('**/datas.js')]
+    // }))
 
     // HMR
-    this.plugins.push(new webpack.HotModuleReplacementPlugin())
+    // this.plugins.push(new webpack.HotModuleReplacementPlugin())
   }
 
   createPages () {
     this.pages.forEach(page => {
-      let t = JSON.stringify({
-        searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts(), this.userConfig.paths.components],
-        context: (page.getPageDatas) ? page.getPageDatas() : {}
-      })
+      // let t = JSON.stringify({
+      //   searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts(), this.userConfig.paths.components()],
+      //   context: (page.getPageDatas) ? page.getPageDatas() : {}
+      // })
 
       this.plugins.push(new HtmlWebpackPlugin({
-        filename: path.join(this.userConfig.paths.dist, page.url, 'index.html'),
-        alwaysWriteToDisk: true,
-        cache: false,
-        template: '!!html-loader!nunjucks-html-loader?' + t + '!' + page.source
+        filename: path.join(this.userConfig.paths.dist(), page.url, 'index.html'),
+        // alwaysWriteToDisk: true,
+        // cache: false,
+        template: page.source
       }))
     })
 

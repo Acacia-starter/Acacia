@@ -44,7 +44,7 @@ const getWebpackConfig = (userConfig = null) => {
 const getDatasFromFile = (filePath, lang) => {
   let datas = {}
   if (fs.existsSync(filePath)) {
-    datas = require(filePath)['default']()
+    datas = require(filePath)['default']
   }
 
   datas = defu(datas, (datas.i18n && datas.i18n[lang]) || {})
@@ -89,12 +89,13 @@ const getPages = (userConfig = null) => {
         source: userConfig.paths.pages(pageName, 'index.html'),
         url,
         getPageDatas: () => {
-          let pageDatasFilePath = userConfig.paths.pages(pageName, 'datas.js')
-          let generalDatasFilePath = userConfig.paths.layouts('datas.js')
-          delete require.cache[pageDatasFilePath]
           delete require.cache[generalDatasFilePath]
+          return getDatasFromFile(generalDatasFilePath, lang)
+          // let pageDatasFilePath = userConfig.paths.pages(pageName, 'datas.js')
+          // let generalDatasFilePath = userConfig.paths.layouts('datas.js')
+          // delete require.cache[generalDatasFilePath]
 
-          return defu(getDatasFromFile(generalDatasFilePath, lang), getDatasFromFile(pageDatasFilePath, lang))
+          // return defu(getDatasFromFile(generalDatasFilePath, lang), getDatasFromFile(pageDatasFilePath, lang))
         }
       })
     })
@@ -104,6 +105,11 @@ const getPages = (userConfig = null) => {
     pages = overridePages(pages, { userConfig })
 
     // Check all pages are correct
+    if (!Array.isArray(pages)) {
+      console.warn('\x1b[31m%s\x1b[0m', 'You need to return your pages in overridePages method')
+      process.exit(0)
+    }
+
     pages.forEach(page => {
       if (!(typeof page.url === 'string')) {
         console.warn('\x1b[31m%s\x1b[0m', `This page has an incorrect url parameter`, page)
@@ -115,11 +121,6 @@ const getPages = (userConfig = null) => {
         process.exit(0)
       }
     })
-
-    if (!Array.isArray(pages)) {
-      console.warn('\x1b[31m%s\x1b[0m', 'You need to return your pages in overridePages method')
-      process.exit(0)
-    }
   }
 
   // Check duplicate urls
