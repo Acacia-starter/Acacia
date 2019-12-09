@@ -1,6 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const { getPages } = require('./utils')
+const akaruConfig = require('../akaru.config')
 
 // Plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -10,25 +10,28 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin')
-const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin')
+const Dotenv = require('dotenv-webpack')
 const Critters = require('critters-webpack-plugin')
+const TerserJSPlugin = require('terser-webpack-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 class WebpackConfig {
   constructor (userConfig) {
     this.userConfig = userConfig
 
-    this.pages = getPages(userConfig)
-    this.rules = []
-    this.plugins = []
-
     this.setRules()
     this.setPlugins()
+    this.setConfig()
+
+    if (akaruConfig.extendWebpackConfig) {
+      akaruConfig.extendWebpackConfig(this.config, { env: this.userConfig.env, isProduction: this.userConfig.isProduction(), isDevelopment: this.userCOnfig.isDevelopment() })
+    }
   }
 
-  get config () {
-    return {
-      mode: this.userConfig.env,
-      entry: this.userConfig.js.entriesFile,
+  setConfig () {
+    this.config = {
+      mode: (['development', 'production'].indexOf(this.userConfig.env) > -1) ? this.userConfig.env : 'none',
+      entry: this.userConfig.js.entries.concat(this.userConfig.styles.entries),
       output: {
         path: this.userConfig.paths.dist(),
         filename: this.userConfig.js.outputName,
@@ -39,9 +42,9 @@ class WebpackConfig {
       },
       resolve: {
         modules: ['node_modules'],
-        extensions: ['.js', '.json', '.scss', '.css'],
+        extensions: ['.js', '.json'],
         alias: Object.assign({}, {
-          '~': this.userConfig.paths.base,
+          '~': this.userConfig.paths.base(),
           '~j': this.userConfig.paths.js(),
           '~s': this.userConfig.paths.styles(),
           '~i': this.userConfig.paths.images(),
@@ -50,22 +53,34 @@ class WebpackConfig {
           '~l': this.userConfig.paths.layouts()
         }, this.userConfig.alias)
       },
-      // resolveLoader: {
-      //   modules: [path.resolve(__dirname, 'webpack-loaders'), 'node_modules'],
-      //   extensions: ['.js', '.json'],
-      //   mainFields: ['loader', 'main']
-      // },
       devtool: this.userConfig.devtool,
-      context: this.userConfig.paths.base,
+      context: this.userConfig.paths.base(),
       target: 'web',
       externals: this.userConfig.externals,
       stats: this.userConfig.stats,
       devServer: this.userConfig.devServer,
       plugins: this.plugins
     }
+
+    if (this.userConfig.js.minify || this.userConfig.styles.minify) {
+      const minimizer = []
+
+      if (this.userConfig.js.minify) {
+        minimizer.push(new TerserJSPlugin())
+      }
+      if (this.userConfig.styles.minify) {
+        minimizer.push(new OptimizeCSSAssetsPlugin())
+      }
+
+      this.config.optimization = {
+        minimizer
+      }
+    }
   }
 
   setRules () {
+    this.rules = []
+
     // Js
     this.rules.push({
       test: /\.js$/,
@@ -83,7 +98,7 @@ class WebpackConfig {
         use: [{
           loader: 'eslint-loader',
           options: {
-            fix: true
+            fix: this.userConfig.js.eslintFix
           }
         }],
         enforce: 'pre'
@@ -121,21 +136,9 @@ class WebpackConfig {
       use: styleLoaders
     })
 
-    // Pug
-    // this.rules.push({
-    //   test: /.pug$/,
-    //   use: [{
-    //     loader: 'pug-loader',
-    //     options: {
-    //       root: this.userConfig.paths.base,
-    //       pretty: !this.userConfig.views.minify
-    //     }
-    //   }]
-    // })
-
     // nunjucks
     this.rules.push({
-      test: /\.html$|njk|nunjucks/,
+      test: /\.(html|njk|nunjucks)$/,
       use: [
         {
           loader: 'simple-nunjucks-loader',
@@ -165,6 +168,8 @@ class WebpackConfig {
   }
 
   setPlugins () {
+    this.plugins = []
+
     // all HTMLWebpackPlugin
     this.createPages()
 
@@ -179,29 +184,40 @@ class WebpackConfig {
     // Clean dist
     if (this.userConfig.cleanDist) {
       this.plugins.push(new CleanWebpackPlugin([this.userConfig.paths.dist()], {
-        root: this.userConfig.paths.base,
+        root: this.userConfig.paths.base(),
         verbose: true
       }))
     }
 
-    this.plugins.push(new webpack.DefinePlugin(this.userConfig.provideVariables))
+    // Define variables
+    const defineVariables = Object.keys(this.userConfig.provideVariables)
+      .reduce((vars, varName) => {
+        vars[varName] = JSON.stringify(this.userConfig.provideVariables[varName])
+        return vars
+      }, {})
+    this.plugins.push(new webpack.DefinePlugin(defineVariables))
+
+    // Define variables from .env file
+    this.plugins.push(new Dotenv({
+      silent: true
+    }))
 
     // TODO: SVG sprite
 
     // Styles
-    // if (this.userConfig.styles.extract) {
-    //   this.plugins.push(new MiniCssExtractPlugin({
-    //     filename: this.userConfig.styles.outputName
-    //   }))
-    // }
+    if (this.userConfig.styles.extract) {
+      this.plugins.push(new MiniCssExtractPlugin({
+        filename: this.userConfig.styles.outputName
+      }))
+    }
 
     // Critical CSS
-    // if (this.userConfig.isProduction()) {
-    //   this.plugins.push(new Critters({
-    //     preload: 'swap',
-    //     preloadFonts: true
-    //   }))
-    // }
+    if (this.userConfig.styles.extractCriticalCss) {
+      this.plugins.push(new Critters({
+        preload: 'swap',
+        preloadFonts: true
+      }))
+    }
 
     // Favicon
     if (this.userConfig.generateFavicon) {
@@ -209,31 +225,27 @@ class WebpackConfig {
     }
 
     // Watch data files
-    // this.plugins.push(new ExtraWatchWebpackPlugin({
-    //   files: [this.userConfig.paths.pages('**/datas.js')]
-    // }))
-
-    // HMR
-    // this.plugins.push(new webpack.HotModuleReplacementPlugin())
+    this.plugins.push(new ExtraWatchWebpackPlugin({
+      files: [this.userConfig.paths.locales('**/*.js')]
+    }))
   }
 
   createPages () {
-    this.pages.forEach(page => {
-      // let t = JSON.stringify({
-      //   searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts(), this.userConfig.paths.components()],
-      //   context: (page.getPageDatas) ? page.getPageDatas() : {}
-      // })
-
+    this.userConfig.pages.forEach(page => {
       this.plugins.push(new HtmlWebpackPlugin({
         filename: path.join(this.userConfig.paths.dist(), page.url, 'index.html'),
-        // alwaysWriteToDisk: true,
-        // cache: false,
-        template: page.source
+        template: page.source,
+        templateParameters: () => {
+          const t = this.userConfig.paths.locales('fr/index.js')
+
+          delete require.cache[t]
+          return require(t)
+        }
       }))
     })
-
-    this.plugins.push(new HtmlWebpackHarddiskPlugin())
   }
 }
 
-module.exports = WebpackConfig
+module.exports = userConfig => {
+  return new WebpackConfig(userConfig)
+}

@@ -1,7 +1,10 @@
 const webpack = require('webpack')
+const getConfig = require('../config/Config')
 const WebpackDevServer = require('webpack-dev-server')
-const webpackConfig = require('../config/utils').getWebpackConfig()
-const path = require('path')
+const getWebpackConfig = require('../config/WebpackConfig')
+
+const config = getConfig()
+const webpackConfig = getWebpackConfig(config)
 
 const { host, port, stats } = webpackConfig.config.devServer
 
@@ -10,7 +13,7 @@ const options = {
   hot: true,
   host,
   clientLogLevel: 'warning'
-  // contentBase: path.resolve(__dirname, '../generate'),
+  // contentBase: path.resolve(__dirname, '../generate')
   // watchContentBase: true
 }
 

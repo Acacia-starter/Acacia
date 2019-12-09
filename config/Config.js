@@ -1,18 +1,25 @@
 const path = require('path')
+const glob = require('glob')
+const packageJson = require('../package.json')
+const akaruConfig = require('../akaru.config')
 
 const pathBase = path.resolve(__dirname, '..')
 
 class Config {
-  constructor (env) {
-    this.env = env
-    this.setConfig()
+  constructor () {
+    this.env = process.env.NODE_ENV || 'development'
+    this.akaruConfig = akaruConfig
+    this.setPaths()
+    this.setBaseConfig()
 
-    if (this.isProduction()) {
-      this.setProductionConfig()
+    if (this.akaruConfig.extendConfig) {
+      this.akaruConfig.extendConfig(this, { env: this.env, isProd: this.isProduction(), isDev: this.isDevelopment() })
     }
 
-    if (process.env.ZIP) {
-      this.zipDist = true
+    this.setPages()
+
+    if (this.akaruConfig.extendPages) {
+      this.akaruConfig.extendPages(this.pages, { env: this.env, isProd: this.isProduction(), isDev: this.isDevelopment() })
     }
   }
 
@@ -24,10 +31,9 @@ class Config {
     return this.env === 'development'
   }
 
-  setConfig () {
-    // Paths
+  setPaths () {
     this.paths = {
-      base: pathBase,
+      base: (...args) => path.resolve(pathBase, ...args),
       assets: (...args) => path.resolve(pathBase, 'assets', ...args),
       js: (...args) => path.resolve(pathBase, 'assets/js', ...args),
       styles: (...args) => path.resolve(pathBase, 'assets/styles', ...args),
@@ -38,23 +44,22 @@ class Config {
       dist: (...args) => path.resolve(pathBase, 'generate', ...args),
       pages: (...args) => path.resolve(pathBase, 'pages', ...args),
       layouts: (...args) => path.resolve(pathBase, 'layouts', ...args),
-      components: (...args) => path.resolve(pathBase, 'components', ...args)
+      components: (...args) => path.resolve(pathBase, 'components', ...args),
+      locales: (...args) => path.resolve(pathBase, 'locales', ...args),
+      archives: (...args) => path.resolve(pathBase, 'builds', ...args)
     }
+  }
 
-    // Common informations
-    this.name = 'Akaru starter'
-    this.port = 5000
-    this.host = '0.0.0.0'
-
+  setBaseConfig () {
     // Langs
-    this.langs = ['en', 'fr']
-    this.defaultLang = 'fr'
+    this.langs = this.akaruConfig.langs
+    this.defaultLang = this.akaruConfig.defaultLang || this.akaruConfig.langs[0]
 
     // Pages
     this.indexPage = 'home'
 
     // Favicon
-    this.generateFavicon = false
+    this.generateFavicon = this.isProduction()
     this.faviconConfig = {
       logo: this.paths.assets('favicon.png'),
       inject: true,
@@ -63,34 +68,38 @@ class Config {
 
     // Js
     this.js = {
-      minify: false,
-      entriesFile: [this.paths.js('index.js')],
+      minify: this.isProduction(),
+      entries: [this.paths.js('index.js')],
       eslint: true,
-      outputName: '[name].js',
-      outputChunkName: '[name].js',
+      eslintFix: true,
+      outputName: this.isProduction() ? '[name].[hash].js' : '[name].js',
+      outputChunkName: this.isProduction() ? '[name].[hash].js' : '[name].js',
       sourcemaps: true
     }
 
-    this.devtool = 'cheap-module-eval-source-map'
+    // common
+    this.cleanDist = this.isProduction()
+    this.devtool = this.isProduction() ? false : 'cheap-module-eval-source-map'
     this.externals = []
     this.alias = {}
-    this.provideVariables = {
-      ENV: JSON.stringify(this.env)
-    }
+    this.provideVariables = Object.assign({}, {
+      ENV: this.env
+    }, this.akaruConfig.env)
 
     // Styles
     this.styles = {
-      minify: false,
+      minify: this.isProduction(),
       postcss: true,
-      extract: false,
+      extract: this.isProduction(),
       entries: [],
-      outputName: '[name].css',
-      sourcemaps: true
+      outputName: this.isProduction() ? '[name].[hash].css' : '[name].css',
+      sourcemaps: true,
+      extractCriticalCss: this.isProduction()
     }
 
     // Views
     this.views = {
-      minify: false
+      minify: this.isProduction()
     }
 
     // SVG
@@ -116,33 +125,59 @@ class Config {
     }
 
     // Zip
-    this.zipDist = false
+    const date = new Date().toISOString().split('T')[0]
+    this.zipDist = process.env.ZIP === true
     this.zipConfig = {
-      path: this.paths.base,
-      filename: 'generate.zip',
+      path: this.paths.archives(),
+      filename: packageJson.name + '-' + date + '.zip',
       pathPrefix: ''
     }
 
     // Dev server
     this.devServer = {
-      host: this.host,
-      port: this.port,
+      host: '0.0.0.0',
+      port: 5000,
       stats: this.stats
     }
   }
 
-  setProductionConfig () {
-    this.generateFavicon = false
-    this.cleanDist = true
-    this.devtool = false
-    this.js.outputName = '[name].[hash].js'
-    this.js.outputChunkName = '[name].[hash].js'
-    this.js.minify = true
-    this.styles.outputName = '[name].[hash].css'
-    this.styles.minify = true
-    this.styles.extract = true
-    this.views.minify = true
+  setPages () {
+    this.pages = []
+
+    const pagesFolders = glob.sync('**/', {
+      cwd: this.paths.pages(),
+      mark: false
+    })
+      .map(directoryName => directoryName.replace(/\/$/, ''))
+
+    this.langs.forEach(lang => {
+      pagesFolders.forEach(pageName => {
+        // construct URL
+        const urlPath = []
+        if (lang !== this.defaultLang) {
+          urlPath.push(lang)
+        }
+        if (pageName !== this.indexPage) {
+          urlPath.push(pageName)
+        }
+
+        const url = '/' + urlPath.join('/')
+
+        this.pages.push({
+          source: this.paths.pages(pageName, 'index.html'),
+          url,
+          lang,
+          getPageDatas: () => {
+            const localeFilePath = this.paths.locales(lang, 'index.js')
+            delete require.cache[localeFilePath]
+            return require(localeFilePath)
+          }
+        })
+      })
+    })
   }
 }
 
-module.exports = Config
+module.exports = _ => {
+  return new Config()
+}
