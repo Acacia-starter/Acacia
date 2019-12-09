@@ -233,14 +233,9 @@ class WebpackConfig {
   createPages () {
     this.userConfig.pages.forEach(page => {
       this.plugins.push(new HtmlWebpackPlugin({
-        filename: path.join(this.userConfig.paths.dist(), page.url, 'index.html'),
+        filename: page.destination,
         template: page.source,
-        templateParameters: () => {
-          const t = this.userConfig.paths.locales('fr/index.js')
-
-          delete require.cache[t]
-          return require(t)
-        }
+        templateParameters: page.datas || {}
       }))
     })
   }

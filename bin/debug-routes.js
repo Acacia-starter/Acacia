@@ -1,19 +1,27 @@
+const path = require('path')
 const getConfig = require('../config/Config')
 
-const s = (n) => '#'.repeat(n)
-const b = () => console.log('\n')
+const config = getConfig()
 
-console.log(s(50))
-console.log(s(21) + ' ROUTES ' + s(21))
-console.log(s(50))
+// Process
+const pages = config.pages.map(page => {
+  const cleanedUp = {}
 
-b()
+  cleanedUp['Url'] = page.url
+  cleanedUp['Lang'] = page.lang
+  cleanedUp['Source template'] = path.relative(config.paths.base(), page.source)
+  cleanedUp['Destination file'] = path.relative(config.paths.base(), page.destination)
 
-getConfig().pages.forEach(r => {
-  b()
-  console.log('URL', r.url)
-  console.log('LANGUE', r.lang)
-  console.log('TEMPLATE', r.source)
-  b()
-  console.log(s(20))
+  return cleanedUp
 })
+
+console.table(pages)
+
+// getConfig().pages.forEach(r => {
+//   b()
+//   console.log('URL', r.url)
+//   console.log('LANGUE', r.lang)
+//   console.log('TEMPLATE', r.source)
+//   b()
+//   console.log(s(20))
+// })
