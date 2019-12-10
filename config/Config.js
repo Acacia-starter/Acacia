@@ -1,5 +1,6 @@
 const path = require('path')
 const glob = require('glob')
+const defu = require('defu')
 const packageJson = require('../package.json')
 const akaruConfig = require('../akaru.config')
 
@@ -51,6 +52,23 @@ class Config {
   }
 
   setBaseConfig () {
+    this.debug = this.akaruConfig.debug || process.env.DEBUG
+
+    // common
+    // TODO: sort them
+    this.cleanDist = this.isProduction()
+    this.devtool = this.isProduction() ? false : 'cheap-module-eval-source-map'
+    this.externals = []
+    this.alias = {}
+    this.provideVariables = Object.assign({}, {
+      ENV: this.env
+    }, this.akaruConfig.env)
+
+    // Metas
+    this.metas = Object.assign({
+      title: 'Akaru starter'
+    }, this.akaruConfig.metas)
+
     // Langs
     this.langs = this.akaruConfig.langs
     this.defaultLang = this.akaruConfig.defaultLang || this.akaruConfig.langs[0]
@@ -63,7 +81,7 @@ class Config {
     this.faviconConfig = {
       logo: this.paths.assets('favicon.png'),
       inject: true,
-      title: 'Akaru Starter'
+      title: this.metas.title
     }
 
     // Js
@@ -76,15 +94,6 @@ class Config {
       outputChunkName: this.isProduction() ? '[name].[hash].js' : '[name].js',
       sourcemaps: true
     }
-
-    // common
-    this.cleanDist = this.isProduction()
-    this.devtool = this.isProduction() ? false : 'cheap-module-eval-source-map'
-    this.externals = []
-    this.alias = {}
-    this.provideVariables = Object.assign({}, {
-      ENV: this.env
-    }, this.akaruConfig.env)
 
     // Styles
     this.styles = {
@@ -169,14 +178,32 @@ class Config {
           url,
           lang,
           datas: () => {
-            const localeFilePath = this.paths.locales(lang, 'index.js')
-            delete require.cache[localeFilePath]
+            const localeFilePath = this.paths.locales(lang, pageName, 'index.js')
+
+            let localeFile = null
 
             try {
-              return require(localeFilePath)
-            } catch (e) {
-              return {}
+              if (require.cache[localeFilePath]) delete require.cache[localeFilePath]
+              localeFile = require(localeFilePath)
+            } catch {
+              if (lang !== this.defaultLang) {
+                const defaultlocaleFilePath = this.paths.locales(this.defaultLang, pageName, 'index.js')
+                if (this.debug) console.log(`Cannot find locale file ${localeFilePath}, try to require default lang file ${defaultlocaleFilePath}`)
+
+                try {
+                  if (require.cache[defaultlocaleFilePath]) delete require.cache[defaultlocaleFilePath]
+                  localeFile = require(defaultlocaleFilePath)
+                } catch {}
+              } else {
+                if (this.debug) console.log(`Cannot find locale file ${localeFilePath}`)
+              }
             }
+
+            return defu(localeFile, {
+              env: this.provideVariables
+            }, {
+              metas: this.metas
+            })
           }
         })
       })

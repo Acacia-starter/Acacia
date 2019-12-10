@@ -30,7 +30,7 @@
     }
   ],
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --watch config --quiet --exec 'node bin/dev.js'",
+    "dev": "cross-env NODE_ENV=development nodemon --watch config --watch akaru.config.js --quiet --exec 'node bin/dev.js'",
     "debug:routes": "node bin/debug-routes.js",
     "generate": "cross-env NODE_ENV=production node bin/generate.js",
     "generate:zip": "cross-env NODE_ENV=production ZIP=true node bin/generate.js",

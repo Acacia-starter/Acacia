@@ -1,8 +1,8 @@
 module.exports = {
-  env: {
-    ok: true
-  },
+  debug: true,
+  env: {},
   langs: ['fr', 'en'],
+  defaultLang: 'fr',
   extendConfig () {},
   extendPages () {}
 }

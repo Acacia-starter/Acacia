@@ -1,4 +1,3 @@
-const path = require('path')
 const webpack = require('webpack')
 const akaruConfig = require('../akaru.config')
 
@@ -174,7 +173,11 @@ class WebpackConfig {
     this.createPages()
 
     // Copy static
-    this.plugins.push(new CopyWebpackPlugin([this.userConfig.paths.static()]))
+    this.plugins.push(new CopyWebpackPlugin([
+      this.userConfig.paths.static()
+    ], {
+      logLevel: this.userConfig.debug ? 'info' : 'silent'
+    }))
 
     // Zip dist
     if (this.userConfig.zipDist) {
@@ -185,7 +188,7 @@ class WebpackConfig {
     if (this.userConfig.cleanDist) {
       this.plugins.push(new CleanWebpackPlugin([this.userConfig.paths.dist()], {
         root: this.userConfig.paths.base(),
-        verbose: true
+        verbose: this.userConfig.debug
       }))
     }
 
@@ -199,7 +202,7 @@ class WebpackConfig {
 
     // Define variables from .env file
     this.plugins.push(new Dotenv({
-      silent: true
+      silent: !this.userConfig.debug
     }))
 
     // TODO: SVG sprite
