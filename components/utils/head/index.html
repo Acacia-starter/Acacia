@@ -1,4 +1,21 @@
+{# Config metas #}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+{# Basic metas #}
 <title>{{ metas.title }}</title>
+<meta name="description" content="{{ metas.description }}">
+
+{# Open graph #}
+<meta property="og:site_name" content="{{ metas.siteName }}">
+<meta property="og:title" content="{{ metas.title }}">
+<meta property="og:url" content="{{ metas.title }}">
+<meta property="og:image" content="{{ metas.image }}">
+<meta property="og:description" content="{{ metas.description }}">
+<meta property="og:locale" content="{{ locale.iso }}">
+
+{# Twitter share #}
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="{{ metas.twitterSite }}">
+<meta name="twitter:creator" content="{{ metas.twitterCreator }}">

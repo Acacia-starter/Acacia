@@ -66,12 +66,13 @@ class Config {
 
     // Metas
     this.metas = Object.assign({
-      title: 'Akaru starter'
+      title: 'Akaru starter',
+      twitterCreator: '@Akaru_studio'
     }, this.akaruConfig.metas)
 
-    // Langs
-    this.langs = this.akaruConfig.langs
-    this.defaultLang = this.akaruConfig.defaultLang || this.akaruConfig.langs[0]
+    // Locales
+    this.locales = this.akaruConfig.locales || [{ code: 'fr', iso: 'fr_FR' }]
+    this.defaultLocale = this.akaruConfig.defaultLocale || this.locales[0]
 
     // Pages
     this.indexPage = 'home'
@@ -159,12 +160,12 @@ class Config {
     })
       .map(directoryName => directoryName.replace(/\/$/, ''))
 
-    this.langs.forEach(lang => {
+    this.locales.forEach(locale => {
       pagesFolders.forEach(pageName => {
         // construct URL
         const urlPath = []
-        if (lang !== this.defaultLang) {
-          urlPath.push(lang)
+        if (locale !== this.defaultLocale) {
+          urlPath.push(locale.code)
         }
         if (pageName !== this.indexPage) {
           urlPath.push(pageName)
@@ -176,9 +177,9 @@ class Config {
           source: this.paths.pages(pageName, 'index.html'),
           destination: this.paths.dist(url, 'index.html'),
           url,
-          lang,
+          locale: locale.code,
           datas: () => {
-            const localeFilePath = this.paths.locales(lang, pageName, 'index.js')
+            const localeFilePath = this.paths.locales(locale.code, pageName, 'index.js')
 
             let localeFile = null
 
@@ -186,9 +187,9 @@ class Config {
               if (require.cache[localeFilePath]) delete require.cache[localeFilePath]
               localeFile = require(localeFilePath)
             } catch {
-              if (lang !== this.defaultLang) {
-                const defaultlocaleFilePath = this.paths.locales(this.defaultLang, pageName, 'index.js')
-                if (this.debug) console.log(`Cannot find locale file ${localeFilePath}, try to require default lang file ${defaultlocaleFilePath}`)
+              if (locale !== this.defaultLocale) {
+                const defaultlocaleFilePath = this.paths.locales(this.defaultLocale.code, pageName, 'index.js')
+                if (this.debug) console.log(`Cannot find locale file ${localeFilePath}, try to require default locale file ${defaultlocaleFilePath}`)
 
                 try {
                   if (require.cache[defaultlocaleFilePath]) delete require.cache[defaultlocaleFilePath]
@@ -200,9 +201,9 @@ class Config {
             }
 
             return defu(localeFile, {
-              env: this.provideVariables
-            }, {
-              metas: this.metas
+              env: this.provideVariables,
+              metas: this.metas,
+              locale
             })
           }
         })
