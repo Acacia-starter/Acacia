@@ -4,9 +4,9 @@
 #######                   #######
 #################################
 
-.history
-generate
-builds
+/.history
+/generate
+/builds
 package-lock.json
 
 
