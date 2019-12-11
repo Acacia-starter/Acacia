@@ -1,4 +1,5 @@
 const webpack = require('webpack')
+const path = require('path')
 const akaruConfig = require('../akaru.config')
 
 // Plugins
@@ -134,7 +135,10 @@ class WebpackConfig {
         {
           loader: 'simple-nunjucks-loader',
           options: {
-            searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts(), this.userConfig.paths.components()]
+            searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts(), this.userConfig.paths.components()],
+            globals: {
+              'getAsset': path.resolve(__dirname, './global-env.js')
+            }
           }
         }]
     })

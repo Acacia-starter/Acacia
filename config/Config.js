@@ -40,7 +40,6 @@ class Config {
       styles: (...args) => path.join(pathBase, 'assets/styles', ...args),
       images: (...args) => path.join(pathBase, 'assets/img', ...args),
       svg: (...args) => path.join(pathBase, 'assets/svg', ...args),
-      svgSprite: (...args) => path.join(pathBase, 'assets/svg/sprite', ...args),
       static: (...args) => path.join(pathBase, 'static', ...args),
       dist: (...args) => path.join(pathBase, 'generate', ...args),
       pages: (...args) => path.join(pathBase, 'pages', ...args),
@@ -61,8 +60,10 @@ class Config {
     this.externals = []
     this.alias = {
       '~': this.paths.base(),
+      '~a': this.paths.assets(),
       '~j': this.paths.js(),
       '~s': this.paths.styles(),
+      '~svg': this.paths.svg(),
       '~i': this.paths.images(),
       '~c': this.paths.components(),
       '~p': this.paths.pages(),
