@@ -155,7 +155,10 @@ class Config {
     this.devServer = {
       host: '0.0.0.0',
       port: 5000,
-      stats: this.stats
+      hot: true,
+      stats: this.stats,
+      clientLogLevel: 'silent',
+      overlay: true
     }
   }
 
