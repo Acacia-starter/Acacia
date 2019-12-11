@@ -1,4 +1,4 @@
-import { Page } from '~j/lib/index.js'
+import Page from '~j/lib/Page.js'
 
 export default class Home extends Page {
   onEnterView () {

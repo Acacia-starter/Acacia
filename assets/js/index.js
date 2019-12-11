@@ -1,42 +1,45 @@
-import Factory from './lib/Factory'
-import { gebi, gebc } from '@qneyraud/q-dom'
+import Factory from '~j/lib/Factory'
+// import ticker from '@lib/plugins/ticker'
 
-// pages
-import Home from '../../pages/home/index.js'
+/**
+ * Polyfill
+ */
+// https://caniuse.com/#search=intersectionobserver
+import 'intersection-observer'
 
-// components
+// Element.closest used in lib https://caniuse.com/#search=element.closest
+// import '@lib/polyfills/closest'
 
-// style
+/**
+ * Pages
+ */
+import Home from '~p/home/index.js'
+
+/**
+ * Components
+ */
+import Image from '~c/blocks/image/index.js'
+
+/**
+ * Styles
+ */
 require('~s/index.styl')
 
 Factory
   .matchPages({
     home: Home
   })
-  .matchComponents({})
+  .matchComponents({
+    image: Image
+  })
 
-window.onload = () => {
-  const root = gebi('root')
+// Router
+//   .setRootEl(rootElement)
+//   .useNavigo({
+//     homeId: 'home'
+//   })
+//   .start()
 
-  if (root) {
-    const page = gebc(root, 'page')
-
-    if (page) {
-      Factory.createPage(gebc(root, 'page'), {
-        root
-      }).init()
-    }
-  }
-}
-
-// debug overflow x
-// var docWidth = document.documentElement.offsetWidth;
-
-// [].forEach.call(
-//   document.querySelectorAll('*'),
-//   function (el) {
-//     if (el.offsetWidth > docWidth) {
-//       console.log(el, el.offsetWidth)
-//     }
-//   }
-// )
+// plugins
+// resize()
+// ticker()

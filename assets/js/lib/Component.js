@@ -1,4 +1,4 @@
-import Element from './Element'
+import Element from '~j/lib/Element'
 
 export default class Component extends Element {
   constructor (datas) {
@@ -7,6 +7,4 @@ export default class Component extends Element {
       type: 'component'
     })
   }
-
-  beforeDestroy () {}
 }

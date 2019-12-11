@@ -1,4 +1,5 @@
-import { Page, Component } from './index'
+import Page from '~j/lib/Page'
+import Component from '~j/lib/Component'
 
 class Factory {
   constructor () {

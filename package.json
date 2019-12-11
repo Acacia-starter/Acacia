@@ -37,7 +37,9 @@
     "serve": "serve ./generate"
   },
   "dependencies": {
-    "@qneyraud/q-dom": "^1.2.1"
+    "@qneyraud/q-stylus": "^1.5.4",
+    "@qneyraud/q-utils": "^1.5.0",
+    "intersection-observer": "^0.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

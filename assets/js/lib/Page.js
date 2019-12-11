@@ -1,64 +1,88 @@
-// import { gebc } from '@qneyraud/q-dom'
-import Element from './Element'
+import Element from '~j/lib/Element'
+import { removeClass, addClass, gebc } from '@qneyraud/q-utils/umd/q-utils.js'
+import observe from '~j/lib/helpers/observer'
 
 export default class Page extends Element {
-  // constructor (datas) {
-  //   super({
-  //     ...datas,
-  //     type: 'page'
-  //   })
-
-  // this.page = this
-  // }
-
-  init () {
-    super.init()
-
-    this.observers = []
+  constructor (datas) {
+    super({
+      ...datas,
+      type: 'page'
+    })
   }
 
-  // getObserver (threshold) {
-  //   const observer = this.observers.find(o => o.threshold === threshold)
+  beforeEnter () {
+    super.beforeEnter()
+    removeClass(this.root, 'loading')
+    window.scrollTo(0, 0)
+  }
 
-  //   if (observer) {
-  //     return observer.observer
-  //   } else {
-  //     const observer = {
-  //       threshold,
-  //       observer: new window.IntersectionObserver(this.observerCallback, {
-  //         threshold: threshold
-  //       })
-  //     }
-  //     this.observers.push(observer)
-  //     return observer.observer
-  //   }
-  // }
+  afterEnter () {
+    super.afterEnter()
+    observe(this.page)
+  }
 
-  // bindMethods () {
-  //   super.bindMethods()
-  //   this.observerCallback = this.observerCallback.bind(this)
-  // }
+  beforeLeave () {
+    super.beforeLeave()
+    addClass(this.root, 'loading')
+  }
 
-  // observeElements () {
-  //   gebc(this.el, 'observe', true)
-  //     .concat(gebc(this.el, 'observe-once', true))
-  //     .forEach(el => {
-  //       const threshold = el.dataset.threshold || 0
-  //       this.getObserver(threshold).observe(el)
-  //     })
-  // }
+  afterLeave () {
+    super.afterLeave()
+    removeClass(gebc(this.page, 'in-view', true), 'in-view')
+  }
 
-  // observerCallback (intersections) {
-  //   intersections.forEach(intersection => {
-  //     if (intersection.isIntersecting) {
-  //       intersection.target.classList.add('in-view')
+  hide (done) {
+    const transitionDuration = 0.5
 
-  //       if (intersection.target.classList.contains('observe-once')) {
-  //         this.observers.forEach(o => o.observer.unobserve(intersection.target))
-  //       }
-  //     } else {
-  //       intersection.target.classList.remove('in-view')
-  //     }
-  //   })
-  // }
+    this.el.style.transitionDuration = `${transitionDuration}s`
+    this.el.style.opacity = 0
+
+    window.setTimeout(() => {
+      this.el.style.display = 'none'
+      done()
+    }, transitionDuration * 1000)
+  }
+
+  show (done) {
+    const transitionDuration = 0.5
+
+    this.el.style.display = 'block'
+    window.setTimeout(() => {
+      this.el.style.transitionDuration = `${transitionDuration}s`
+      this.el.style.opacity = 1
+    }, 100)
+
+    window.setTimeout(() => {
+      done()
+    }, transitionDuration * 1000)
+  }
+
+  showFast (done) {
+    this.el.style.display = 'block'
+    this.el.style.opacity = 0.95
+    done()
+  }
+
+  hideFast () {
+    this.el.style.display = 'none'
+    this.el.style.opacity = 0
+  }
+
+  showWrapper () {
+    return new Promise((resolve) => {
+      this.show(resolve)
+    })
+  }
+
+  showFastWrapper () {
+    return new Promise((resolve) => {
+      this.showFast(resolve)
+    })
+  }
+
+  hideWrapper () {
+    return new Promise((resolve) => {
+      this.hide(resolve)
+    })
+  }
 }
