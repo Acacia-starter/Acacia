@@ -1,2 +1,5 @@
 > 0.25%
+edge >= 14
+not ie <= 10
+not op_mini all
 not dead

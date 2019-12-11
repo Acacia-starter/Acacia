@@ -16,12 +16,3 @@ const pages = config.pages.map(page => {
 })
 
 console.table(pages)
-
-// getConfig().pages.forEach(r => {
-//   b()
-//   console.log('URL', r.url)
-//   console.log('LANGUE', r.lang)
-//   console.log('TEMPLATE', r.source)
-//   b()
-//   console.log(s(20))
-// })

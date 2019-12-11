@@ -13,11 +13,8 @@ const options = {
   hot: true,
   host,
   clientLogLevel: 'warning'
-  // contentBase: path.resolve(__dirname, '../generate')
-  // watchContentBase: true
 }
 
-// WebpackDevServer.addDevServerEntrypoints(webpackConfig.config, options)
 const compiler = webpack(webpackConfig.config)
 const server = new WebpackDevServer(compiler, options)
 
