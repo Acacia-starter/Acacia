@@ -42,15 +42,7 @@ class WebpackConfig {
       resolve: {
         modules: ['node_modules'],
         extensions: ['.js', '.json'],
-        alias: Object.assign({}, {
-          '~': this.userConfig.paths.base(),
-          '~j': this.userConfig.paths.js(),
-          '~s': this.userConfig.paths.styles(),
-          '~i': this.userConfig.paths.images(),
-          '~c': this.userConfig.paths.components(),
-          '~p': this.userConfig.paths.pages(),
-          '~l': this.userConfig.paths.layouts()
-        }, this.userConfig.alias)
+        alias: this.userConfig.alias
       },
       devtool: this.userConfig.devtool,
       context: this.userConfig.paths.base(),

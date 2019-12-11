@@ -59,7 +59,15 @@ class Config {
     this.cleanDist = this.isProduction()
     this.devtool = this.isProduction() ? false : 'cheap-module-eval-source-map'
     this.externals = []
-    this.alias = {}
+    this.alias = {
+      '~': this.paths.base(),
+      '~j': this.paths.js(),
+      '~s': this.paths.styles(),
+      '~i': this.paths.images(),
+      '~c': this.paths.components(),
+      '~p': this.paths.pages(),
+      '~l': this.paths.layouts()
+    }
     this.provideVariables = Object.assign({}, {
       ENV: this.env
     }, this.akaruConfig.env)
