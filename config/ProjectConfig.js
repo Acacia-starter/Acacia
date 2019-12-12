@@ -6,29 +6,40 @@ const akaruConfig = require('../akaru.config')
 
 const pathBase = path.resolve(__dirname, '..')
 
-class Config {
+class ProjectConfig {
   constructor () {
     this.env = process.env.NODE_ENV || 'development'
     this.akaruConfig = akaruConfig
     this.setPaths()
     this.setBaseConfig()
 
+    // If extendsConfig is defined in config file, use it
     if (this.akaruConfig.extendConfig) {
-      this.akaruConfig.extendConfig(this, { env: this.env, isProd: this.isProduction(), isDev: this.isDevelopment() })
+      this.akaruConfig.extendConfig(this, {
+        env: this.env,
+        isProd: this.isProd(),
+        isDev: this.isDev()
+      })
     }
 
+    // Create pages
     this.setPages()
 
+    // If extendsPage is defined in config file, use it
     if (this.akaruConfig.extendPages) {
-      this.akaruConfig.extendPages(this.pages, { env: this.env, isProd: this.isProduction(), isDev: this.isDevelopment() })
+      this.akaruConfig.extendPages(this.pages, {
+        env: this.env,
+        isProd: this.isProd(),
+        isDev: this.isDev()
+      })
     }
   }
 
-  isProduction () {
+  isProd () {
     return this.env === 'production'
   }
 
-  isDevelopment () {
+  isDev () {
     return this.env === 'development'
   }
 
@@ -55,8 +66,8 @@ class Config {
 
     // common
     // TODO: sort them
-    this.cleanDist = this.isProduction()
-    this.devtool = this.isProduction() ? false : 'cheap-module-eval-source-map'
+    this.cleanDist = this.isProd()
+    this.devtool = this.isProd() ? false : 'cheap-module-eval-source-map'
     this.externals = []
     this.alias = {
       '~': this.paths.base(),
@@ -69,6 +80,7 @@ class Config {
       '~p': this.paths.pages(),
       '~l': this.paths.layouts()
     }
+
     this.provideVariables = Object.assign({}, {
       ENV: this.env
     }, this.akaruConfig.env)
@@ -87,7 +99,7 @@ class Config {
     this.indexPage = 'home'
 
     // Favicon
-    this.generateFavicon = this.isProduction()
+    this.generateFavicon = this.isProd()
     this.faviconConfig = {
       logo: this.paths.assets('favicon.png'),
       inject: true,
@@ -96,38 +108,30 @@ class Config {
 
     // Js
     this.js = {
-      minify: this.isProduction(),
+      minify: this.isProd(),
       entries: [this.paths.js('index.js')],
       eslint: true,
       eslintFix: true,
-      outputName: this.isProduction() ? '[name].[hash].js' : '[name].js',
-      outputChunkName: this.isProduction() ? '[name].[hash].js' : '[name].js',
+      outputName: this.isProd() ? '[name].[hash].js' : '[name].js',
+      outputChunkName: this.isProd() ? '[name].[hash].js' : '[name].js',
       sourcemaps: true
     }
 
     // Styles
     this.styles = {
-      minify: this.isProduction(),
+      minify: this.isProd(),
       postcss: true,
-      extract: this.isProduction(),
+      extract: this.isProd(),
       entries: [],
-      outputName: this.isProduction() ? '[name].[hash].css' : '[name].css',
+      outputName: this.isProd() ? '[name].[hash].css' : '[name].css',
       sourcemaps: true,
-      extractCriticalCss: this.isProduction()
+      extractCriticalCss: this.isProd()
     }
 
     // Views
     this.views = {
-      minify: this.isProduction()
+      minify: this.isProd()
     }
-
-    // SVG
-    // this.svg = {
-    //   svgo: true,
-    //   sprite: true,
-    //   svgSpritePath: 'src/svg/sprite/*.svg',
-    //   spriteFilename: '../views/commons/sprite.[hash].svg'
-    // }
 
     // Webpack stats
     this.stats = {
@@ -163,9 +167,13 @@ class Config {
     }
   }
 
+  /**
+   * Get all pages infos used in build
+   */
   setPages () {
     this.pages = []
 
+    // Get all directory names in pages directory
     const pagesFolders = glob.sync('**/', {
       cwd: this.paths.pages(),
       mark: false
@@ -174,7 +182,7 @@ class Config {
 
     this.locales.forEach(locale => {
       pagesFolders.forEach(pageName => {
-        // construct URL
+        // construct URL from locale and page name
         const urlPath = []
         if (locale !== this.defaultLocale) {
           urlPath.push(locale.code)
@@ -182,7 +190,6 @@ class Config {
         if (pageName !== this.indexPage) {
           urlPath.push(pageName)
         }
-
         const url = '/' + urlPath.join('/')
 
         this.pages.push({
@@ -196,9 +203,11 @@ class Config {
             let localeFile = null
 
             try {
+              // Try to require datas corresponding to the current locale and page name
               if (require.cache[localeFilePath]) delete require.cache[localeFilePath]
               localeFile = require(localeFilePath)
             } catch {
+              // Fallback to default locale
               if (locale !== this.defaultLocale) {
                 const defaultlocaleFilePath = this.paths.locales(this.defaultLocale.code, pageName, 'index.js')
                 if (this.debug) console.log(`Cannot find locale file ${localeFilePath}, try to require default locale file ${defaultlocaleFilePath}`)
@@ -212,6 +221,7 @@ class Config {
               }
             }
 
+            // Merge datas over env variables, default metas and current locale infos
             return defu(localeFile, {
               env: this.provideVariables,
               metas: this.metas,
@@ -225,5 +235,5 @@ class Config {
 }
 
 module.exports = _ => {
-  return new Config()
+  return new ProjectConfig()
 }

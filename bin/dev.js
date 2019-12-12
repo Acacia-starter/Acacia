@@ -1,10 +1,10 @@
 const webpack = require('webpack')
-const getConfig = require('../config/Config')
+const getProjectConfig = require('../config/ProjectConfig')
 const WebpackDevServer = require('webpack-dev-server')
 const getWebpackConfig = require('../config/WebpackConfig')
 
-const config = getConfig()
-const webpackConfig = getWebpackConfig(config)
+const projectConfig = getProjectConfig()
+const webpackConfig = getWebpackConfig(projectConfig)
 
 const { host, port } = webpackConfig.config.devServer
 

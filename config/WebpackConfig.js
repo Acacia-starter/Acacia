@@ -1,5 +1,4 @@
 const webpack = require('webpack')
-const path = require('path')
 const akaruConfig = require('../akaru.config')
 
 // Plugins
@@ -16,26 +15,26 @@ const TerserJSPlugin = require('terser-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 class WebpackConfig {
-  constructor (userConfig) {
-    this.userConfig = userConfig
+  constructor (projectConfig) {
+    this.projectConfig = projectConfig
 
     this.setRules()
     this.setPlugins()
     this.setConfig()
 
     if (akaruConfig.extendWebpackConfig) {
-      akaruConfig.extendWebpackConfig(this.config, { env: this.userConfig.env, isProduction: this.userConfig.isProduction(), isDevelopment: this.userCOnfig.isDevelopment() })
+      akaruConfig.extendWebpackConfig(this.config, { env: this.projectConfig.env, isProduction: this.projectConfig.isProduction(), isDevelopment: this.projectConfig.isDevelopment() })
     }
   }
 
   setConfig () {
     this.config = {
-      mode: (['development', 'production'].indexOf(this.userConfig.env) > -1) ? this.userConfig.env : 'none',
-      entry: this.userConfig.js.entries.concat(this.userConfig.styles.entries),
+      mode: this.getWebpackMode(),
+      entry: [...this.projectConfig.js.entries, ...this.projectConfig.styles.entries],
       output: {
-        path: this.userConfig.paths.dist(),
-        filename: this.userConfig.js.outputName,
-        chunkFilename: this.userConfig.js.outputChunkName
+        path: this.projectConfig.paths.dist(),
+        filename: this.projectConfig.js.outputName,
+        chunkFilename: this.projectConfig.js.outputChunkName
       },
       module: {
         rules: this.rules
@@ -43,24 +42,24 @@ class WebpackConfig {
       resolve: {
         modules: ['node_modules'],
         extensions: ['.js', '.json'],
-        alias: this.userConfig.alias
+        alias: this.projectConfig.alias
       },
-      devtool: this.userConfig.devtool,
-      context: this.userConfig.paths.base(),
+      devtool: this.projectConfig.devtool,
+      context: this.projectConfig.paths.base(),
       target: 'web',
-      externals: this.userConfig.externals,
-      stats: this.userConfig.stats,
-      devServer: this.userConfig.devServer,
+      externals: this.projectConfig.externals,
+      stats: this.projectConfig.stats,
+      devServer: this.projectConfig.devServer,
       plugins: this.plugins
     }
 
-    if (this.userConfig.js.minify || this.userConfig.styles.minify) {
+    if (this.projectConfig.js.minify || this.projectConfig.styles.minify) {
       const minimizer = []
 
-      if (this.userConfig.js.minify) {
+      if (this.projectConfig.js.minify) {
         minimizer.push(new TerserJSPlugin())
       }
-      if (this.userConfig.styles.minify) {
+      if (this.projectConfig.styles.minify) {
         minimizer.push(new OptimizeCSSAssetsPlugin())
       }
 
@@ -68,6 +67,21 @@ class WebpackConfig {
         minimizer
       }
     }
+  }
+
+  /**
+   * Get Webpack mode config
+   *
+   * Only development and production are valids
+   *
+   * @return {string} - webpack mode
+   */
+  getWebpackMode () {
+    if (['development', 'production'].indexOf(this.projectConfig.env) > -1) {
+      return this.projectConfig.env
+    }
+
+    return 'none'
   }
 
   setRules () {
@@ -83,14 +97,14 @@ class WebpackConfig {
     })
 
     // Eslint
-    if (this.userConfig.js.eslint) {
+    if (this.projectConfig.js.eslint) {
       this.rules.push({
         test: /\.js$/,
         exclude: /node_modules/,
         use: [{
           loader: 'eslint-loader',
           options: {
-            fix: this.userConfig.js.eslintFix
+            fix: this.projectConfig.js.eslintFix
           }
         }],
         enforce: 'pre'
@@ -99,7 +113,7 @@ class WebpackConfig {
 
     // Styles
     const styleLoaders = []
-    if (this.userConfig.styles.extract) {
+    if (this.projectConfig.styles.extract) {
       styleLoaders.push(MiniCssExtractPlugin.loader)
     } else {
       styleLoaders.push({
@@ -109,10 +123,10 @@ class WebpackConfig {
     styleLoaders.push({
       loader: 'css-loader',
       options: {
-        sourceMap: this.userConfig.styles.sourcemaps
+        sourceMap: this.projectConfig.styles.sourcemaps
       }
     })
-    if (this.userConfig.styles.postcss) {
+    if (this.projectConfig.styles.postcss) {
       styleLoaders.push({
         loader: 'postcss-loader'
       })
@@ -120,7 +134,7 @@ class WebpackConfig {
     styleLoaders.push({
       loader: 'stylus-loader',
       options: {
-        sourceMap: this.userConfig.styles.sourcemaps
+        sourceMap: this.projectConfig.styles.sourcemaps
       }
     })
     this.rules.push({
@@ -135,7 +149,7 @@ class WebpackConfig {
         {
           loader: 'simple-nunjucks-loader',
           options: {
-            searchPaths: [this.userConfig.paths.pages(), this.userConfig.paths.layouts(), this.userConfig.paths.components()],
+            searchPaths: [this.projectConfig.paths.pages(), this.projectConfig.paths.layouts(), this.projectConfig.paths.components()],
             globals: require('./nunjucks-functions'),
             filters: require('./nunjucks-filters')
           }
@@ -149,8 +163,20 @@ class WebpackConfig {
     })
 
     // SVGs
+    // svg files ending by '_clean.svg' will not go through SVGO
     this.rules.push({
-      test: /\.svg$/i,
+      test: /_clean\.svg$/,
+      use: [ {
+        loader: 'raw-loader',
+        options: {
+          esModule: false
+        }
+      }]
+    })
+
+    // others are cleaned up
+    this.rules.push({
+      test: /\.svg$/,
       use: [ {
         loader: 'raw-loader',
         options: {
@@ -186,48 +212,48 @@ class WebpackConfig {
 
     // Copy static
     this.plugins.push(new CopyWebpackPlugin([
-      this.userConfig.paths.static()
+      this.projectConfig.paths.static()
     ], {
-      logLevel: this.userConfig.debug ? 'info' : 'silent'
+      logLevel: this.projectConfig.debug ? 'info' : 'silent'
     }))
 
     // Zip dist
-    if (this.userConfig.zipDist) {
-      this.plugins.push(new ZipWebpackPlugin(this.userConfig.zipConfig))
+    if (this.projectConfig.zipDist) {
+      this.plugins.push(new ZipWebpackPlugin(this.projectConfig.zipConfig))
     }
 
     // Clean dist
-    if (this.userConfig.cleanDist) {
-      this.plugins.push(new CleanWebpackPlugin([this.userConfig.paths.dist()], {
-        root: this.userConfig.paths.base(),
-        verbose: this.userConfig.debug
+    if (this.projectConfig.cleanDist) {
+      this.plugins.push(new CleanWebpackPlugin([this.projectConfig.paths.dist()], {
+        root: this.projectConfig.paths.base(),
+        verbose: this.projectConfig.debug
       }))
     }
 
     // Define variables
-    const defineVariables = Object.keys(this.userConfig.provideVariables)
+    const defineVariables = Object.keys(this.projectConfig.provideVariables)
       .reduce((vars, varName) => {
-        vars[varName] = JSON.stringify(this.userConfig.provideVariables[varName])
+        vars[varName] = JSON.stringify(this.projectConfig.provideVariables[varName])
         return vars
       }, {})
     this.plugins.push(new webpack.DefinePlugin(defineVariables))
 
     // Define variables from .env file
     this.plugins.push(new Dotenv({
-      silent: !this.userConfig.debug
+      silent: !this.projectConfig.debug
     }))
 
     // TODO: SVG
 
     // Styles
-    if (this.userConfig.styles.extract) {
+    if (this.projectConfig.styles.extract) {
       this.plugins.push(new MiniCssExtractPlugin({
-        filename: this.userConfig.styles.outputName
+        filename: this.projectConfig.styles.outputName
       }))
     }
 
     // Critical CSS
-    if (this.userConfig.styles.extractCriticalCss) {
+    if (this.projectConfig.styles.extractCriticalCss) {
       this.plugins.push(new Critters({
         preload: 'swap',
         preloadFonts: true
@@ -235,18 +261,18 @@ class WebpackConfig {
     }
 
     // Favicon
-    if (this.userConfig.generateFavicon) {
-      this.plugins.push(new FaviconsWebpackPlugin(this.userConfig.faviconConfig))
+    if (this.projectConfig.generateFavicon) {
+      this.plugins.push(new FaviconsWebpackPlugin(this.projectConfig.faviconConfig))
     }
 
     // Watch data files
     this.plugins.push(new ExtraWatchWebpackPlugin({
-      files: [this.userConfig.paths.locales('**/*.js')]
+      files: [this.projectConfig.paths.locales('**/*.js')]
     }))
   }
 
   createPages () {
-    this.userConfig.pages.forEach(page => {
+    this.projectConfig.pages.forEach(page => {
       this.plugins.push(new HtmlWebpackPlugin({
         filename: page.destination,
         template: page.source,
@@ -256,6 +282,6 @@ class WebpackConfig {
   }
 }
 
-module.exports = userConfig => {
-  return new WebpackConfig(userConfig)
+module.exports = projectConfig => {
+  return new WebpackConfig(projectConfig)
 }
