@@ -206,7 +206,7 @@ class ProjectConfig {
               // Try to require datas corresponding to the current locale and page name
               if (require.cache[localeFilePath]) delete require.cache[localeFilePath]
               localeFile = require(localeFilePath)
-            } catch {
+            } catch (err) {
               // Fallback to default locale
               if (locale !== this.defaultLocale) {
                 const defaultlocaleFilePath = this.paths.locales(this.defaultLocale.code, pageName, 'index.js')
@@ -215,7 +215,7 @@ class ProjectConfig {
                 try {
                   if (require.cache[defaultlocaleFilePath]) delete require.cache[defaultlocaleFilePath]
                   localeFile = require(defaultlocaleFilePath)
-                } catch {}
+                } catch (err) {}
               } else {
                 if (this.debug) console.log(`Cannot find locale file ${localeFilePath}`)
               }
