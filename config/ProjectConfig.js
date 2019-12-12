@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const path = require('path')
 const glob = require('glob')
 const defu = require('defu')
