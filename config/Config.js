@@ -34,19 +34,19 @@ class Config {
 
   setPaths () {
     this.paths = {
-      base: (...args) => path.join(pathBase, ...args),
-      assets: (...args) => path.join(pathBase, 'assets', ...args),
-      js: (...args) => path.join(pathBase, 'assets/js', ...args),
-      styles: (...args) => path.join(pathBase, 'assets/styles', ...args),
-      images: (...args) => path.join(pathBase, 'assets/img', ...args),
-      svg: (...args) => path.join(pathBase, 'assets/svg', ...args),
-      static: (...args) => path.join(pathBase, 'static', ...args),
-      dist: (...args) => path.join(pathBase, 'generate', ...args),
-      pages: (...args) => path.join(pathBase, 'pages', ...args),
-      layouts: (...args) => path.join(pathBase, 'layouts', ...args),
-      components: (...args) => path.join(pathBase, 'components', ...args),
-      locales: (...args) => path.join(pathBase, 'locales', ...args),
-      archives: (...args) => path.join(pathBase, 'builds', ...args)
+      base: (...args) => path.resolve(pathBase, ...args),
+      assets: (...args) => path.resolve(pathBase, 'assets', ...args),
+      js: (...args) => path.resolve(pathBase, 'assets/js', ...args),
+      styles: (...args) => path.resolve(pathBase, 'assets/styles', ...args),
+      images: (...args) => path.resolve(pathBase, 'assets/img', ...args),
+      svg: (...args) => path.resolve(pathBase, 'assets/svg', ...args),
+      static: (...args) => path.resolve(pathBase, 'static', ...args),
+      dist: (...args) => path.resolve(pathBase, 'generate', ...args),
+      pages: (...args) => path.resolve(pathBase, 'pages', ...args),
+      layouts: (...args) => path.resolve(pathBase, 'layouts', ...args),
+      components: (...args) => path.resolve(pathBase, 'components', ...args),
+      locales: (...args) => path.resolve(pathBase, 'locales', ...args),
+      archives: (...args) => path.resolve(pathBase, 'builds', ...args)
     }
   }
 
@@ -122,12 +122,12 @@ class Config {
     }
 
     // SVG
-    this.svg = {
-      svgo: true,
-      sprite: true,
-      svgSpritePath: 'src/svg/sprite/*.svg',
-      spriteFilename: '../views/commons/sprite.[hash].svg'
-    }
+    // this.svg = {
+    //   svgo: true,
+    //   sprite: true,
+    //   svgSpritePath: 'src/svg/sprite/*.svg',
+    //   spriteFilename: '../views/commons/sprite.[hash].svg'
+    // }
 
     // Webpack stats
     this.stats = {
@@ -187,7 +187,7 @@ class Config {
 
         this.pages.push({
           source: this.paths.pages(pageName, 'index.html'),
-          destination: this.paths.dist(url, 'index.html'),
+          destination: this.paths.dist(`./${url}`, 'index.html'),
           url,
           locale: locale.code,
           datas: () => {

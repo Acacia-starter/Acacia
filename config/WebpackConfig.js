@@ -144,8 +144,25 @@ class WebpackConfig {
 
     // Images and files
     this.rules.push({
-      test: /\.(jpe?g|png|gif|svg|tga|gltf|babylon|mtl|pcb|pcd|prwm|obj|mat|mp3|ogg)$/i,
+      test: /\.(jpe?g|png|gif|tga|gltf|babylon|mtl|pcb|pcd|prwm|obj|mat|mp3|ogg)$/i,
       use: ['file-loader']
+    })
+
+    // SVGs
+    this.rules.push({
+      test: /\.svg$/i,
+      use: [ {
+        loader: 'raw-loader',
+        options: {
+          esModule: false
+        }
+      }, {
+        loader: 'svgo-loader',
+        options: {
+          externalConfig: 'svgo-config.json'
+        }
+      }
+      ]
     })
 
     // Shaders
@@ -200,7 +217,7 @@ class WebpackConfig {
       silent: !this.userConfig.debug
     }))
 
-    // TODO: SVG sprite
+    // TODO: SVG
 
     // Styles
     if (this.userConfig.styles.extract) {

@@ -1,5 +1,4 @@
 import Factory from '~j/lib/Factory'
-// import ticker from '@lib/plugins/ticker'
 
 /**
  * Polyfill
@@ -19,6 +18,7 @@ import Home from '~p/home/index.js'
  * Components
  */
 import Image from '~c/blocks/image/index.js'
+// import ticker from '@lib/plugins/ticker'
 
 /**
  * Styles
