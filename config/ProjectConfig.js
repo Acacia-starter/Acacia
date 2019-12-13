@@ -226,7 +226,8 @@ class ProjectConfig {
             return defu(localeFile, {
               env: this.provideVariables,
               metas: this.metas,
-              locale
+              locale,
+              url
             })
           }
         })
