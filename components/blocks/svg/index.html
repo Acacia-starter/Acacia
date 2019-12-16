@@ -1,0 +1,12 @@
+{% extends "component.html" %}
+{% set id = 'svg' %}
+
+{% set props = props|merge({
+  name: null
+}) %}
+
+{% set classes = [props.name] %}
+
+{% block componentcontent %}
+  {{ getAsset('svg/' + props.name + '.svg') | safe }}
+{% endblock %}

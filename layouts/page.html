@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <main class="page" data-page="{{ pageId }}" id="{{ pageId }}">
+  <main class="page" data-page="{{ pageId }}" id="{{ pageId }}" data-uid="{{ getUid() }}">
     {# Content #}
     {% block pagecontent %}{% endblock %}
   </main>

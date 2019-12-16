@@ -24,7 +24,11 @@ class WebpackConfig {
     this.setConfig()
 
     if (akaruConfig.extendWebpackConfig) {
-      akaruConfig.extendWebpackConfig(this.config, { env: this.projectConfig.env, isProduction: this.projectConfig.isProduction(), isDevelopment: this.projectConfig.isDevelopment() })
+      akaruConfig.extendWebpackConfig(this.config, {
+        env: this.projectConfig.env,
+        isProd: this.projectConfig.isProd(),
+        isDev: this.projectConfig.isDev()
+      })
     }
   }
 
@@ -91,7 +95,7 @@ class WebpackConfig {
     // Js
     this.rules.push({
       test: /\.js$/,
-      exclude: /node_modules/,
+      exclude: /(node_modules|config)/,
       use: [
         'babel-loader'
       ]

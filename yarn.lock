@@ -5860,10 +5860,9 @@ number-is-nan@^1.0.0:
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0=
 
-nunjucks@^3.2.0:
+nunjucks@AkaruStudio/nunjucks#master:
   version "3.2.0"
-  resolved "https://registry.yarnpkg.com/nunjucks/-/nunjucks-3.2.0.tgz#53e95f43c9555e822e8950008a201b1002d49933"
-  integrity sha512-YS/qEQ6N7qCnUdm6EoYRBfJUdWNT0PpKbbRnogV2XyXbBm2STIP1O6yrdZHgwMVK7fIYUx7i8+yatEixnXSB1w==
+  resolved "https://codeload.github.com/AkaruStudio/nunjucks/tar.gz/2db75e848cf790bdb102c2056abc94e41b16aa97"
   dependencies:
     a-sync-waterfall "^1.0.0"
     asap "^2.0.3"
@@ -7688,6 +7687,14 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
+
+simple-nunjucks-loader@^1.0.0-alpha.9:
+  version "1.0.0-alpha.9"
+  resolved "https://registry.yarnpkg.com/simple-nunjucks-loader/-/simple-nunjucks-loader-1.0.0-alpha.9.tgz#5f0413fc69f5b22f9277359e6f0e8eaf913024e1"
+  integrity sha512-CIhuUUSB8wibmAmottWx8Zr+r7vd3i7meqEivk/RsFvG647cAUqVwWqMMAAzI5a32MmIS0cfAXJwAUGbnq4kKg==
+  dependencies:
+    loader-utils "^1.2.3"
+    schema-utils "^2.6.1"
 
 simple-swizzle@^0.2.2:
   version "0.2.2"

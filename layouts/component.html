@@ -1,4 +1,4 @@
-{% set allclasses = ['component'].concat(component.classes).concat(classes).concat(id ~ 'Component') %}
+{% set allclasses = ['js-component'].concat(component.classes).concat(classes).concat(id ~ '--component') %}
 
 {% set styleVarsString = '' %}
 {% for index, value in {}|merge(component.styleVars)|merge(stylesVars) %}
@@ -6,7 +6,7 @@
 {% endfor %}
 
 {% set datasetString = '' %}
-{% for index, value in {}|merge(component.datasets)|merge(datasets) %}
+{% for index, value in {}|merge(component.datasets)|merge(datasets)|merge({uid: getUid()}) %}
   {% set datasetString = datasetString + ' data-' + index + '=' + value %}
 {% endfor %}
 

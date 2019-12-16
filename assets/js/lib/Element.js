@@ -7,7 +7,7 @@ export default class Element {
     // element infos
     this.el = el
     this.id = id
-    this.uid = '_' + Math.random().toString(36).substr(2, 9)
+    this.uid = this.el.dataset.uid
     this.type = type
 
     // structure
@@ -20,17 +20,12 @@ export default class Element {
     this.refs = {}
     this.datas = this.el.dataset
 
-    this.setElementUid()
     this.$bus = EventBus
   }
 
   createElement () {
     this.setRefs()
     this.setChildren()
-  }
-
-  setElementUid () {
-    this.el.dataset.uid = this.uid
   }
 
   /**
@@ -79,7 +74,7 @@ export default class Element {
   setChildren () {
     this.children = []
 
-    this.children = gebc(this.el, 'component', true)
+    this.children = gebc(this.el, 'js-component', true)
       .filter(this.isInElementScope.bind(this))
       .map(componentEl => {
         const component = Factory.createComponent(componentEl, {

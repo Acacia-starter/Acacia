@@ -6,6 +6,7 @@
   "keywords": [
     "landing",
     "es6",
+    "stylus",
     "sass",
     "webpack"
   ],
@@ -68,11 +69,12 @@
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.2",
     "nodemon": "^1.18.3",
-    "nunjucks": "^3.2.0",
+    "nunjucks": "AkaruStudio/nunjucks#master",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^4.0.0",
     "serve": "^10.1.2",
+    "simple-nunjucks-loader": "^1.0.0-alpha.9",
     "style-loader": "^0.22.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
