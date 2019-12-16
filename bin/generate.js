@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const webpack = require('webpack')
 const getProjectConfig = require('../config/ProjectConfig')
 const getWebpackConfig = require('../config/WebpackConfig')
