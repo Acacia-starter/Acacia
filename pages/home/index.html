@@ -4,8 +4,6 @@
 {% block pagecontent %}
   <img width="50" height="50" src="{{ getAsset('img/sample.jpg') }}" alt="">
 
-  {{ getAsset('svg/google.svg') | safe }}
-
   <a href="{{ getUrl('/about', url) }}">aaa</a>
 
   {% include 'blocks/svg/index.html' with {

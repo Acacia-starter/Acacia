@@ -122,7 +122,10 @@ class WebpackConfig {
       styleLoaders.push(MiniCssExtractPlugin.loader)
     } else {
       styleLoaders.push({
-        loader: 'style-loader'
+        loader: 'style-loader',
+        options: {
+          sourceMap: this.projectConfig.styles.sourcemaps
+        }
       })
     }
     styleLoaders.push({
@@ -133,7 +136,10 @@ class WebpackConfig {
     })
     if (this.projectConfig.styles.postcss) {
       styleLoaders.push({
-        loader: 'postcss-loader'
+        loader: 'postcss-loader',
+        options: {
+          sourceMap: this.projectConfig.styles.sourcemaps
+        }
       })
     }
     styleLoaders.push({
@@ -182,6 +188,7 @@ class WebpackConfig {
     // others are cleaned up
     this.rules.push({
       test: /\.svg$/,
+      exclude: /_clean\.svg$/,
       use: [ {
         loader: 'raw-loader',
         options: {

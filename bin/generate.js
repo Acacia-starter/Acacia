@@ -1,9 +1,9 @@
 const webpack = require('webpack')
-const getConfig = require('../config/Config')
+const getProjectConfig = require('../config/ProjectConfig')
 const getWebpackConfig = require('../config/WebpackConfig')
 
-const config = getConfig()
-const webpackConfig = getWebpackConfig(config)
+const projectConfig = getProjectConfig()
+const webpackConfig = getWebpackConfig(projectConfig)
 
 const compiler = webpack(webpackConfig.config)
 compiler.run((err, stats) => {
