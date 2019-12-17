@@ -255,8 +255,6 @@ class WebpackConfig {
       silent: !this.projectConfig.debug
     }))
 
-    // TODO: SVG
-
     // Styles
     if (this.projectConfig.styles.extract) {
       this.plugins.push(new MiniCssExtractPlugin({

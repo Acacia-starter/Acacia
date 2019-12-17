@@ -2,13 +2,13 @@
 {% set pageId = 'home' %}
 
 {% block pagecontent %}
-  <img width="50" height="50" src="{{ getAsset('img/sample.jpg') }}" alt="">
-
   <a href="{{ getUrl('/about', url) }}">aaa</a>
 
-  {% include 'blocks/svg/index.html' with {
+  {{ getAsset('img/sample.jpg') }}
+
+  {% include 'blocks/image/index.html' with {
     props: {
-      name: 'google'
+      sources: [ getAsset('img/sample.jpg') ]
     }
   } %}
 

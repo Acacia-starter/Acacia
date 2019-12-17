@@ -1,5 +1,4 @@
 {% extends "component.html" %}
-{% set id = 'image' %}
 
 {% set props = props|merge({
   placement: 'cover',
@@ -9,11 +8,17 @@
   sources: ['http://placecorgi.com/1200/800']
 }) %}
 
-{% set classes = [props.placement] %}
-{% set stylesVars = {
-  placement: props.placement,
-  position: props.position
-} %}
+{% set component = createComponent(component, {
+  id: 'image',
+  classes: [props.placement],
+  styleVars: {
+    placement: props.placement,
+    position: props.position
+  },
+  attributes: {
+    ref: 'image'
+  }
+}) %}
 
 {% block componentcontent %}
   <picture>

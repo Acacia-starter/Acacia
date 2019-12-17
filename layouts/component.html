@@ -1,27 +1,11 @@
-{% set allclasses = ['js-component'].concat(component.classes).concat(classes).concat(id ~ '--component') %}
+{% set componentInfos = getComponentInfos(component) %}
 
-{% set styleVarsString = '' %}
-{% for index, value in {}|merge(component.styleVars)|merge(stylesVars) %}
-  {% set styleVarsString = styleVarsString + '--' + index + ':' + value + ';' %}
-{% endfor %}
-
-{% set datasetString = '' %}
-{% for index, value in {}|merge(component.datasets)|merge(datasets)|merge({uid: getUid()}) %}
-  {% set datasetString = datasetString + ' data-' + index + '=' + value %}
-{% endfor %}
-
-{% set attrString = '' %}
-{% for index, value in {}|merge(component.attributes)|merge(attributes) %}
-  {% set attrString = attrString + index + '=' + value %}
-{% endfor %}
-
-<div
-  class="{{ allclasses|join(' ') }}"
-  data-component="{{ id }}"
-  {% if component.id %}id="{{ component.id }}"{% endif %}
-  {% if styleVarsString|length %}style="{{ styleVarsString }}"{% endif %}
-  {% if datasetString|length %}{{ datasetString }}{% endif %}
-  {% if attrString|length %}{{ attrString }}{% endif %}>
+<{{ componentInfos.tag }}
+  class="{{ componentInfos.classesString }}"
+  {% if componentInfos.id %}id="{{ componentInfos.id }}"{% endif %}
+  {% if componentInfos.styleVarsString|length %}{{ componentInfos.styleVarsString | safe }}{% endif %}
+  {% if componentInfos.datasetString|length %}{{ componentInfos.datasetString | safe }}{% endif %}
+  {% if componentInfos.attributesString|length %}{{ componentInfos.attributesString | safe }}{% endif %}>
     {# Content #}
     {% block componentcontent %}{% endblock %}
-</div>
+</{{ componentInfos.tag }}>
