@@ -64,6 +64,7 @@ class ProjectConfig {
 
   setBaseConfig () {
     this.debug = this.akaruConfig.debug || process.env.DEBUG
+    this.baseUrl = this.akaruConfig.baseUrl
 
     // common
     // TODO: sort them
@@ -87,7 +88,7 @@ class ProjectConfig {
     }, this.akaruConfig.env)
 
     // Metas
-    this.metas = Object.assign({
+    this.metas = Object.assign({}, {
       title: 'Akaru starter',
       twitterCreator: '@Akaru_studio'
     }, this.akaruConfig.metas)
@@ -227,7 +228,8 @@ class ProjectConfig {
               env: this.provideVariables,
               metas: this.metas,
               locale,
-              url
+              url,
+              baseUrl: this.baseUrl
             })
           }
         })
