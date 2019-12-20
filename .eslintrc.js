@@ -1,3 +1,4 @@
 module.exports = {
-  "extends": "@qneyraud/eslint-config"
+  parser: "babel-eslint",
+  extends: '@qneyraud/eslint-config'
 };
