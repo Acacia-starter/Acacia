@@ -5,10 +5,11 @@
   "description": "Landing page generator",
   "keywords": [
     "landing",
+    "webpack",
     "es6",
+    "babel",
     "stylus",
-    "sass",
-    "webpack"
+    "sass"
   ],
   "bugs": {
     "email": "contact@akaru.fr",
