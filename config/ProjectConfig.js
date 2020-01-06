@@ -51,6 +51,7 @@ class ProjectConfig {
       js: (...args) => path.resolve(pathBase, 'assets/js', ...args),
       styles: (...args) => path.resolve(pathBase, 'assets/styles', ...args),
       images: (...args) => path.resolve(pathBase, 'assets/img', ...args),
+      videos: (...args) => path.resolve(pathBase, 'assets/videos', ...args),
       svg: (...args) => path.resolve(pathBase, 'assets/svg', ...args),
       static: (...args) => path.resolve(pathBase, 'static', ...args),
       dist: (...args) => path.resolve(pathBase, 'generate', ...args),
@@ -76,8 +77,9 @@ class ProjectConfig {
       '~a': this.paths.assets(),
       '~j': this.paths.js(),
       '~s': this.paths.styles(),
-      '~svg': this.paths.svg(),
       '~i': this.paths.images(),
+      '~v': this.paths.videos(),
+      '~svg': this.paths.svg(),
       '~c': this.paths.components(),
       '~p': this.paths.pages(),
       '~l': this.paths.layouts()

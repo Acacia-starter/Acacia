@@ -161,6 +161,7 @@ class WebpackConfig {
           loader: 'simple-nunjucks-loader',
           options: {
             searchPaths: [this.projectConfig.paths.pages(), this.projectConfig.paths.layouts(), this.projectConfig.paths.components()],
+            assetsPaths: [this.projectConfig.paths.assets(), this.projectConfig.paths.images()],
             globals: require('./nunjucks-functions'),
             filters: require('./nunjucks-filters')
           }
