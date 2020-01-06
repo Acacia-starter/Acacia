@@ -90,10 +90,7 @@ class ProjectConfig {
     }, this.akaruConfig.env)
 
     // Metas
-    this.metas = Object.assign({}, {
-      title: 'Akaru starter',
-      twitterCreator: '@Akaru_studio'
-    }, this.akaruConfig.metas)
+    this.metas = this.akaruConfig.metas || {}
 
     // Locales
     this.locales = this.akaruConfig.locales || [{ code: 'fr', iso: 'fr_FR' }]
@@ -107,7 +104,7 @@ class ProjectConfig {
     this.faviconConfig = {
       logo: this.paths.assets('favicon.png'),
       inject: true,
-      title: this.metas.title
+      title: this.metas.siteName
     }
 
     // Js
