@@ -2,10 +2,7 @@
 {% set pageId = 'about' %}
 
 {% block pagecontent %}
-  <img width="50" height="50" src="{{ getAsset('img/sample.jpg') }}" alt="">
-
-  {{ getAsset('svg/google.svg') | safe }}
+  {{ static('svg/google.svg') | safe }}
 
   <a href="{{ getUrl('/about', url) }}">aaa</a>
-
 {% endblock %}
