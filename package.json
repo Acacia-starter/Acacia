@@ -2,7 +2,7 @@
   "name": "akaru-starter",
   "version": "1.0.0",
   "license": "ISC",
-  "description": "Landing page generator",
+  "description": "Configurable static site generator",
   "keywords": [
     "landing",
     "webpack",
@@ -12,17 +12,17 @@
     "sass"
   ],
   "bugs": {
-    "email": "contact@akaru.fr",
-    "url": "https://github.com/akarustudio/akarustarter/issues"
+    "url": "https://github.com/quentinneyraud/akaru-starter/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/akarustudio/akarustarter"
+    "url": "git+https://github.com/quentinneyraud/akaru-starter.git"
   },
+  "homepage": "https://quentinneyraud.github.io/akaru-starter",
   "author": {
-    "name": "Akaru Studio",
-    "email": "contact@akaru.fr",
-    "url": "http://www.akaru.fr/"
+    "name": "Quentin Neyraud",
+    "email": "quentin.neyraud@gmail.com",
+    "url": "https://github.com/quentinneyraud"
   },
   "contributors": [
     {
