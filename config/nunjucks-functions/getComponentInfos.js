@@ -10,14 +10,14 @@ module.exports = component => {
   componentInfos.tag = component.tag || 'div'
 
   // classes
-  componentInfos.classes = [`${getFirstLetterUppercase(component.id)}--Component`, 'component', ...component.classes]
+  componentInfos.classes = [`${getFirstLetterUppercase(component.id)}--component`, 'component', ...component.classes]
   componentInfos.classes = Array.from(new Set(componentInfos.classes))
   componentInfos.classesString = componentInfos.classes.join(' ')
 
   // style vars
   componentInfos.styleVars = component.styleVars
   componentInfos.styleVarsString = Object.entries(componentInfos.styleVars)
-    .map(([key, value]) => `--${key}=${value};`)
+    .map(([key, value]) => `--${key}:${value};`)
     .join('')
   componentInfos.styleVarsString = `style="${componentInfos.styleVarsString}"`
 
