@@ -5,7 +5,10 @@
   name: null
 }) %}
 
-{% set classes = [props.name] %}
+{% set component = createComponent(component, {
+  id: 'svg',
+  classes: [props.name]
+}) %}
 
 {% block componentcontent %}
   {{ getAsset('svg/' + props.name + '.svg') | safe }}

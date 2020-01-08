@@ -2,7 +2,12 @@
 {% set pageId = 'about' %}
 
 {% block pagecontent %}
-  {{ static('svg/google.svg') | safe }}
 
-  <a href="{{ getUrl('/about', url) }}">aaa</a>
+  {% include 'blocks/svg/index.html' with {
+    props: {
+      name: 'google'
+    }
+  } %}
+
+  <a href="{{ getUrl('/', url) }}">Home</a>
 {% endblock %}
