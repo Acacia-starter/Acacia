@@ -2,13 +2,16 @@
 {% set pageId = 'home' %}
 
 {% block pagecontent %}
-  <a href="{{ getUrl('/about', url) }}">aaa</a>
+  <a href="{{ getUrl('/about', url) }}">about</a>
 
-  <img src="{{ static('./img/sample.jpg') }}"/>
+  <img style="display:none" src="{{ static('./img/sample.jpg') }}"/>
 
   {% include 'blocks/image/index.html' with {
     props: {
       sources: [static('./img/sample.jpg')]
+    },
+    component: {
+      classes: ['image']
     }
   } %}
 
