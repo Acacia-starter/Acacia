@@ -142,16 +142,32 @@ class WebpackConfig {
         }
       })
     }
-    styleLoaders.push({
-      loader: 'stylus-loader',
-      options: {
-        sourceMap: this.projectConfig.styles.sourcemaps
-      }
-    })
-    this.rules.push({
-      test: /\.styl$/,
-      use: styleLoaders
-    })
+
+    if (this.projectConfig.styles.preprocessor === 'stylus') {
+      styleLoaders.push({
+        loader: 'stylus-loader',
+        options: {
+          sourceMap: this.projectConfig.styles.sourcemaps
+        }
+      })
+      this.rules.push({
+        test: /\.styl$/,
+        use: styleLoaders
+      })
+    }
+
+    if (this.projectConfig.styles.preprocessor === 'sass') {
+      styleLoaders.push({
+        loader: 'sass-loader',
+        options: {
+          sourceMap: this.projectConfig.styles.sourcemaps
+        }
+      })
+      this.rules.push({
+        test: /\.s[ac]ss$/i,
+        use: styleLoaders
+      })
+    }
 
     // nunjucks
     this.rules.push({

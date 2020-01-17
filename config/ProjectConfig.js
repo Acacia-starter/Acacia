@@ -7,6 +7,8 @@ const akaruConfig = require('../akaru.config')
 
 const pathBase = path.resolve(__dirname, '..')
 
+const AVAILABLE_STYLES_PREPROCESSORS = ['stylus', 'sass']
+
 class ProjectConfig {
   constructor () {
     this.env = process.env.NODE_ENV || 'development'
@@ -120,6 +122,7 @@ class ProjectConfig {
 
     // Styles
     this.styles = {
+      preprocessor: 'stylus',
       minify: this.isProd(),
       postcss: true,
       extract: this.isProd(),
@@ -235,8 +238,16 @@ class ProjectConfig {
       })
     })
   }
+
+  validate () {
+    if (AVAILABLE_STYLES_PREPROCESSORS.indexOf(this.styles.preprocessor) === -1) {
+      throw new Error(`${this.styles.preprocessor} is not a valid style preprocessor`)
+    }
+  }
 }
 
 module.exports = _ => {
-  return new ProjectConfig()
+  const c = new ProjectConfig()
+  c.validate()
+  return c
 }
