@@ -2,6 +2,17 @@
 # yarn lockfile v1
 
 
+"@akaru/nunjucks@^3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@akaru/nunjucks/-/nunjucks-3.2.3.tgz#fedef5d8d8932b2094154f58358dea0ce6413c57"
+  integrity sha512-0XsHaUI6VYk6YSWFYuvJnYCYzWOhMpHUIa5bJJx2e8nSfDjpzVk7Cp0w6mxtsO8ifgAvHgOhS+Z2py567hHPxQ==
+  dependencies:
+    a-sync-waterfall "^1.0.0"
+    asap "^2.0.3"
+    yargs "^3.32.0"
+  optionalDependencies:
+    chokidar "^2.0.0"
+
 "@babel/code-frame@7.0.0-beta.36":
   version "7.0.0-beta.36"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0-beta.36.tgz#2349d7ec04b3a06945ae173280ef8579b63728e4"
@@ -5793,16 +5804,6 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0=
-
-nunjucks@AkaruStudio/nunjucks#master:
-  version "3.2.0"
-  resolved "https://codeload.github.com/AkaruStudio/nunjucks/tar.gz/d64270f48e4bba8ed312ed444c78d5374cf8ce18"
-  dependencies:
-    a-sync-waterfall "^1.0.0"
-    asap "^2.0.3"
-    yargs "^3.32.0"
-  optionalDependencies:
-    chokidar "^2.0.0"
 
 nwsapi@^2.0.9:
   version "2.2.0"
