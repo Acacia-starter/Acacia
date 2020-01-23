@@ -191,33 +191,30 @@ class WebpackConfig {
     })
 
     // SVGs
-    // svg files ending by '_clean.svg' will not go through SVGO
-    this.rules.push({
-      test: /_clean\.svg$/,
-      use: [ {
-        loader: 'raw-loader',
-        options: {
-          esModule: false
-        }
-      }]
-    })
-
-    // others are cleaned up
+    // All SVGs files are cleaned by SVGO unless you specify otherwise
     this.rules.push({
       test: /\.svg$/,
-      exclude: /_clean\.svg$/,
-      use: [ {
-        loader: 'raw-loader',
-        options: {
-          esModule: false
-        }
+      oneOf: [{
+        resourceQuery: /raw/,
+        use: [ {
+          loader: 'raw-loader',
+          options: {
+            esModule: false
+          }
+        }]
       }, {
-        loader: 'svgo-loader',
-        options: {
-          externalConfig: 'svgo-config.json'
-        }
-      }
-      ]
+        use: [{
+          loader: 'raw-loader',
+          options: {
+            esModule: false
+          }
+        }, {
+          loader: 'svgo-loader',
+          options: {
+            externalConfig: 'svgo-config.json'
+          }
+        }]
+      }]
     })
 
     // Shaders

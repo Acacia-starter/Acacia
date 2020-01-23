@@ -6,6 +6,10 @@
 
   <img style="display:none" src="{{ static('./img/sample.jpg') }}"/>
 
+  {{ getAsset('svg/google.svg', 'raw') | safe }}
+
+  {{ getAsset('svg/google.svg') | safe }}
+
   {% include 'blocks/image/index.html' with {
     props: {
       sources: [static('./img/sample.jpg')]
