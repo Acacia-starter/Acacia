@@ -61,3 +61,8 @@ Lint js files and automatically fix problems
 ### browserlist
 ### akaru config (extendConfig, extendWebpackConfig, extendRoutes)
 ### metas
+
+
+## Credits
+
+**Library icon** :  [Tree by sigra from the Noun Project](https://thenounproject.com/term/tree/2863734/)
