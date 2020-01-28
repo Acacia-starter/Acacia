@@ -1,0 +1,10 @@
+# https://docs.netlify.com/configure-builds/file-based-configuration/#sample-file
+
+[build]
+  publish = "generate/"
+  command = "npm run generate"
+
+[[redirects]]
+  from = "/*"
+  to = "/404"
+  status = 404
