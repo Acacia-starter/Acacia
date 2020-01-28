@@ -16,7 +16,7 @@ class ProjectConfig {
     this.setPaths()
     this.setBaseConfig()
 
-    // If extendsConfig is defined in config file, use it
+    // If extendConfig is defined in config file, use it
     if (this.akaruConfig.extendConfig) {
       this.akaruConfig.extendConfig(this, {
         env: this.env,
@@ -28,7 +28,7 @@ class ProjectConfig {
     // Create pages
     this.setPages()
 
-    // If extendsPage is defined in config file, use it
+    // If extendPage is defined in config file, use it
     if (this.akaruConfig.extendPages) {
       this.akaruConfig.extendPages(this.pages, {
         env: this.env,
@@ -153,12 +153,16 @@ class ProjectConfig {
 
     // Zip
     const date = new Date().toISOString().split('T')[0]
-    this.zipDist = process.env.ZIP === true
+    this.zipDist = process.env.ZIP === 'true'
     this.zipConfig = {
       path: this.paths.archives(),
       filename: packageJson.name + '-' + date + '.zip',
       pathPrefix: ''
     }
+
+    // Analyze
+    this.analyzeBundle = process.env.ANALYZE === 'true'
+    this.analyzeConfig = {}
 
     // Dev server
     this.devServer = {

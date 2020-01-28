@@ -34,8 +34,10 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --watch config --watch akaru.config.js --quiet --exec 'node bin/dev.js'",
     "debug:routes": "node bin/debug-routes.js",
+    "generate:analyze": "npm run lint && cross-env NODE_ENV=production ANALYZE=true node bin/generate.js",
     "generate": "npm run lint && cross-env NODE_ENV=production node bin/generate.js",
     "generate:zip": "npm run lint && cross-env NODE_ENV=production ZIP=true node bin/generate.js",
+    "build": "npm run generate",
     "lint": "eslint assets/js components pages",
     "lint:fix": "eslint --fix assets/js components pages",
     "serve": "serve ./generate",
@@ -95,6 +97,7 @@
     "svgo-loader": "^2.2.1",
     "terser-webpack-plugin": "^2.2.2",
     "webpack": "^4.17.1",
+    "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.5",
     "zip-webpack-plugin": "^3.0.0"

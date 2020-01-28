@@ -20,11 +20,15 @@ Launch a webpack development server with hot-reloading
 
 ### generate
 
-Build your site with webpack and minify the HTML, JS & CSS, extract critical CSS, generate favicon
+Build your site with webpack and minify HTML, JS & CSS, extract critical CSS, generate favicon
 
 ### generate:zip
 
 Generate and then create a zip of bundled files
+
+### generate:analyze
+
+Generate and visualize size of webpack output files thanks to [webpack-bundle-analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer)
 
 ### serve
 
@@ -32,7 +36,7 @@ Serve bundled site
 
 ### debug:routes
 
-Show each routes infos (url, source template, destination file, locale)
+Show routes infos (url, source template, destination file, locale)
 
 ### lint
 
@@ -42,7 +46,7 @@ Lint js files
 
 Lint js files and automatically fix problems
 
-## Features
+## Features to explain
 
 ### Babel (async, chaining .?)
 ### Eslint

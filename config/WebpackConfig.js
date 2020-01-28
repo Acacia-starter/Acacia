@@ -14,6 +14,7 @@ const Dotenv = require('dotenv-webpack')
 const Critters = require('critters-webpack-plugin')
 const TerserJSPlugin = require('terser-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 class WebpackConfig {
   constructor (projectConfig) {
@@ -246,6 +247,11 @@ class WebpackConfig {
     // Zip dist
     if (this.projectConfig.zipDist) {
       this.plugins.push(new ZipWebpackPlugin(this.projectConfig.zipConfig))
+    }
+
+    // Analyze bundle
+    if (this.projectConfig.analyzeBundle) {
+      this.plugins.push(new BundleAnalyzerPlugin(this.projectConfig.analyzeConfig))
     }
 
     // Clean dist
