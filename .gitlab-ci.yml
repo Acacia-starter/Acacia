@@ -1,0 +1,17 @@
+image: node
+
+before_script:
+  - yarn install
+
+cache:
+  paths:
+    - node_modules/
+
+pages:
+  script:
+    - npm run generate
+  artifacts:
+    paths:
+      - generate
+  only:
+    - master
