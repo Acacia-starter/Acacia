@@ -1,6 +1,8 @@
 image: node
 
 before_script:
+  - apt-get update -qy
+  - apt-get install -y lftp
   - yarn install
 
 cache:
@@ -10,6 +12,7 @@ cache:
 pages:
   script:
     - npm run generate
+    - lftp -e "open $FTP_HOST; user $FTP_USERNAME $FTP_PASSWORD; mirror -X .* -X .*/ --reverse --verbose --delete local-folder/ destination-folder/; bye"
   artifacts:
     paths:
       - generate
