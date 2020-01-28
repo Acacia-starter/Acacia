@@ -1,9 +1,13 @@
+# Global docker image
+image: node
+
+# Stages order
 stages:
   - build
   - deploy
 
+# Build job
 build:
-  image: node
   stage: build
   before_script:
     - yarn install
@@ -18,8 +22,8 @@ build:
   only:
     - master
 
+# Deploy job
 deploy:
-  image: debian
   stage: deploy
   before_script:
     - apt-get update -qy
