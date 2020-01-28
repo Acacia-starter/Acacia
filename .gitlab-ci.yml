@@ -12,7 +12,7 @@ cache:
 pages:
   script:
     - npm run generate
-    - lftp -e "open $FTP_HOST; user $FTP_USERNAME $FTP_PASSWORD; mirror -X .* -X .*/ --reverse --verbose --delete local-folder/ destination-folder/; bye"
+    - lftp -e "open $FTP_HOST; user $FTP_USERNAME $FTP_PASSWORD; mirror -X .* -X .*/ --reverse --verbose --delete generate/ clients/akaru-starter/; bye"
   artifacts:
     paths:
       - generate
