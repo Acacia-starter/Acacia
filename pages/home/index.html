@@ -2,7 +2,7 @@
 {% set pageId = 'home' %}
 
 {% block pagecontent %}
-  <a href="{{ getUrl('/about', url) }}">about</a>
+  <a href="{{ getUrl(currentUrl, '/about') }}">about</a>
 
   <img style="display:none" src="{{ static('./img/sample.jpg') }}"/>
 

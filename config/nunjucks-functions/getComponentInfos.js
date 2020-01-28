@@ -19,7 +19,8 @@ module.exports = component => {
   componentInfos.styleVarsString = Object.entries(componentInfos.styleVars)
     .map(([key, value]) => `--${key}:${value};`)
     .join('')
-  componentInfos.styleVarsString = `style="${componentInfos.styleVarsString}"`
+
+  if (componentInfos.styleVarsString.length > 0) componentInfos.styleVarsString = `style="${componentInfos.styleVarsString}"`
 
   // attributes
   componentInfos.attributes = component.attributes

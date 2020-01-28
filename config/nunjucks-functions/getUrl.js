@@ -1,5 +1,5 @@
 /* eslint-disable */
-module.exports = (to, from) => {
+module.exports = (from, to) => {
   const ret = []
   const fromParts = from.split('/').filter(a => a.length)
   const toParts = to.split('/').filter(a => a.length)

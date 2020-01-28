@@ -234,7 +234,7 @@ class ProjectConfig {
               env: this.provideVariables,
               metas: this.metas,
               locale,
-              url,
+              currentUrl: url,
               baseUrl: this.baseUrl
             })
           }
