@@ -1,0 +1,9 @@
+{% extends "page.html" %}
+{% set pageId = 'error-404' %}
+
+{% block pagecontent %}
+
+  <h1>404 error</h1>
+
+  <a href="{{ getUrl(currentUrl, '/') }}">Home</a>
+{% endblock %}
