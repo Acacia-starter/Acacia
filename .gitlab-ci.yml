@@ -1,3 +1,7 @@
+stages:
+  - build
+  - deploy
+
 build:
   image: node
   before_script:
