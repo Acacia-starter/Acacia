@@ -65,6 +65,7 @@ Lint js files and automatically fix problems
 ### browserlist
 ### akaru config (extendConfig, extendWebpackConfig, extendRoutes)
 ### metas
+### Deploys (netlify, gitlab-ci)
 
 
 ## Credits
