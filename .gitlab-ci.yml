@@ -1,20 +1,24 @@
-image: node
-
-before_script:
-  - apt-get update -qy
-  - apt-get install -y lftp
-  - yarn install
-
-cache:
-  paths:
-    - node_modules/
-
-pages:
+build:
+  image: node
+  before_script:
+    - yarn install
+  cache:
+    paths:
+      - node_modules/
   script:
     - npm run generate
-    - lftp -e "open $FTP_HOST; user $FTP_USERNAME $FTP_PASSWORD; mirror -X .* -X .*/ --reverse --verbose --delete generate/ clients/akaru-starter/; bye"
   artifacts:
     paths:
       - generate
+  only:
+    - master
+
+deploy:
+  image: debian
+  before_script:
+    - apt-get update -qy
+    - apt-get install -y lftp
+  script:
+    - lftp -e "open $FTP_HOST; user $FTP_USERNAME $FTP_PASSWORD; mirror -X .* -X .*/ --reverse --verbose --delete generate/ clients/akaru-starter/; bye"
   only:
     - master
