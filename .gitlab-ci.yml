@@ -4,6 +4,7 @@ stages:
 
 build:
   image: node
+  stage: build
   before_script:
     - yarn install
   cache:
@@ -19,6 +20,7 @@ build:
 
 deploy:
   image: debian
+  stage: deploy
   before_script:
     - apt-get update -qy
     - apt-get install -y lftp
