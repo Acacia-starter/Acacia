@@ -69,11 +69,9 @@ class ProjectConfig {
     this.debug = this.akaruConfig.debug || process.env.DEBUG
     this.baseUrl = this.akaruConfig.baseUrl
 
-    // common
-    // TODO: sort them
+    // Common
     this.cleanDist = this.isProd()
     this.devtool = this.isProd() ? false : 'cheap-module-eval-source-map'
-    this.externals = []
     this.alias = {
       '~': this.paths.base(),
       '~a': this.paths.assets(),
@@ -117,7 +115,8 @@ class ProjectConfig {
       eslintFix: true,
       outputName: this.isProd() ? '[name].[hash].js' : '[name].js',
       outputChunkName: this.isProd() ? '[name].[hash].js' : '[name].js',
-      sourcemaps: true
+      sourcemaps: true,
+      externals: []
     }
 
     // Styles
@@ -163,6 +162,9 @@ class ProjectConfig {
     // Analyze
     this.analyzeBundle = process.env.ANALYZE === 'true'
     this.analyzeConfig = {}
+
+    // generateSitemap
+    this.generateSitemap = this.isProd()
 
     // Dev server
     this.devServer = {

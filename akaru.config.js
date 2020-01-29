@@ -1,7 +1,7 @@
 module.exports = {
   debug: true,
   siteName: 'My project',
-  baseUrl: 'http://google.fr',
+  baseUrl: 'http://my-project.fr',
   metas: {
     title: 'My project'
   },

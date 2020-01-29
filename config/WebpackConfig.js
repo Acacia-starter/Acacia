@@ -15,6 +15,7 @@ const Critters = require('critters-webpack-plugin')
 const TerserJSPlugin = require('terser-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const SitemapWebpackPlugin = require('sitemap-webpack-plugin').default
 
 class WebpackConfig {
   constructor (projectConfig) {
@@ -53,7 +54,7 @@ class WebpackConfig {
       devtool: this.projectConfig.devtool,
       context: this.projectConfig.paths.base(),
       target: 'web',
-      externals: this.projectConfig.externals,
+      externals: this.projectConfig.js.externals,
       stats: this.projectConfig.stats,
       devServer: this.projectConfig.devServer,
       plugins: this.plugins
@@ -252,6 +253,13 @@ class WebpackConfig {
     // Analyze bundle
     if (this.projectConfig.analyzeBundle) {
       this.plugins.push(new BundleAnalyzerPlugin(this.projectConfig.analyzeConfig))
+    }
+
+    // Sitemap
+    if (this.projectConfig.generateSitemap && this.projectConfig.baseUrl) {
+      const paths = this.projectConfig.pages.map(page => page.url)
+
+      this.plugins.push(new SitemapWebpackPlugin(this.projectConfig.baseUrl, paths))
     }
 
     // Clean dist
