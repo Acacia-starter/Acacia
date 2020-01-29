@@ -126,10 +126,7 @@ class WebpackConfig {
       })
     } else {
       styleLoaders.push({
-        loader: 'style-loader',
-        options: {
-          sourceMap: this.projectConfig.styles.sourcemaps
-        }
+        loader: 'style-loader'
       })
     }
     styleLoaders.push({
