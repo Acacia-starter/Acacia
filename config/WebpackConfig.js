@@ -121,7 +121,9 @@ class WebpackConfig {
     // Styles
     const styleLoaders = []
     if (this.projectConfig.styles.extract) {
-      styleLoaders.push(MiniCssExtractPlugin.loader)
+      styleLoaders.push({
+        loader: MiniCssExtractPlugin.loader
+      })
     } else {
       styleLoaders.push({
         loader: 'style-loader',
@@ -189,7 +191,12 @@ class WebpackConfig {
     // Images and files
     this.rules.push({
       test: /\.(jpe?g|png|gif|tga|gltf|babylon|mtl|pcb|pcd|prwm|obj|mat|mp3|ogg)$/i,
-      use: ['file-loader']
+      use: [{
+        loader: 'file-loader',
+        options: {
+          name: this.projectConfig.files.outputName
+        }
+      }]
     })
 
     // SVGs

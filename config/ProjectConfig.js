@@ -113,8 +113,8 @@ class ProjectConfig {
       entries: [this.paths.js('index.js')],
       eslint: true,
       eslintFix: true,
-      outputName: this.isProd() ? '[name].[hash].js' : '[name].js',
-      outputChunkName: this.isProd() ? '[name].[hash].js' : '[name].js',
+      outputName: this.isProd() ? 'assets/js/[name].[hash].js' : '[name].js',
+      outputChunkName: this.isProd() ? 'assets/js/[name].[hash].js' : '[name].js',
       sourcemaps: true,
       externals: []
     }
@@ -126,9 +126,14 @@ class ProjectConfig {
       postcss: true,
       extract: this.isProd(),
       entries: [],
-      outputName: this.isProd() ? '[name].[hash].css' : '[name].css',
+      outputName: this.isProd() ? 'assets/css/[name].[hash].css' : '[name].css',
       sourcemaps: true,
       extractCriticalCss: this.isProd()
+    }
+
+    // Files
+    this.files = {
+      outputName: this.isProd() ? '[path][name].[contenthash].[ext]' : '[name].[ext]'
     }
 
     // Views
