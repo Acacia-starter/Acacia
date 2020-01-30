@@ -1017,10 +1017,10 @@
   resolved "https://registry.yarnpkg.com/@qneyraud/q-stylus/-/q-stylus-1.5.6.tgz#8877f11b466957a5dc6438e3eda7fceaaa826a29"
   integrity sha512-HpZUNGPxgK2N0SdBj5cH0hFYp7cZ8ZrMqmIQ9bqjHIaTPVSyZ0h0cl5SnBwk6esoohcsawY4ONqlTvfaIC8cnA==
 
-"@qneyraud/q-utils@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@qneyraud/q-utils/-/q-utils-1.6.0.tgz#8b7ac97f9687a633801796d6faf4ae054a03bef7"
-  integrity sha512-cw/8AfmjSECYZvP8ifKOQdlAUub8kIV3J+MMmeK+Rdgg95kWqPpQMapDFoFjK9WK+ApD2QdnjSYoCB612KY0Uw==
+"@qneyraud/q-utils@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@qneyraud/q-utils/-/q-utils-1.6.1.tgz#04ecd72d54c2c6f21789ee2763347868fd153ee0"
+  integrity sha512-5y97O+dspkBR2FbCHySFhxnB9c4L9OFWxYRjEwq8lS+dauS6hPfJAlHYMDbcgauR7Bp7T7zjT8J8TlHAhdtD5A==
 
 "@types/anymatch@*":
   version "1.3.1"
