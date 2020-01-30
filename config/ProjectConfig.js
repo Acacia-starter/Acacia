@@ -99,12 +99,31 @@ class ProjectConfig {
     // Pages
     this.indexPage = 'home'
 
-    // Favicon
+    // Favicon (https://github.com/jantimon/favicons-webpack-plugin#advanced-usage + https://github.com/itgalaxy/favicons#usage)
     this.generateFavicon = this.isProd()
     this.faviconConfig = {
       logo: this.paths.assets('favicon.png'),
       inject: true,
-      title: this.metas.siteName
+      cache: true,
+      prefix: 'favicons/',
+      favicons: {
+        appName: this.akaruConfig.siteName || this.metas.title,
+        appDescription: this.metas.description,
+        lang: this.defaultLocale.iso,
+        background: '#ddd',
+        theme_color: '#333',
+        logging: this.verbose,
+        icons: {
+          android: true,
+          appleIcon: true,
+          appleStartup: true,
+          coast: false,
+          favicons: true,
+          firefox: true,
+          windows: true,
+          yandex: false
+        }
+      }
     }
 
     // Js
@@ -129,6 +148,7 @@ class ProjectConfig {
       outputName: this.isProd() ? 'assets/css/[name].[hash].css' : '[name].css',
       sourcemaps: true,
       extractCriticalCss: this.isProd()
+      // extractCriticalCss: false
     }
 
     // Files
@@ -141,7 +161,7 @@ class ProjectConfig {
       minify: this.isProd()
     }
 
-    // Webpack stats
+    // Webpack stats (https://webpack.js.org/configuration/stats/)
     this.stats = {
       assets: true,
       chunks: false,
@@ -155,7 +175,7 @@ class ProjectConfig {
       entrypoints: false
     }
 
-    // Zip
+    // Zip (https://github.com/erikdesjardins/zip-webpack-plugin#usage)
     const date = new Date().toISOString().split('T')[0]
     this.zipDist = process.env.ZIP === 'true'
     this.zipConfig = {
@@ -164,9 +184,11 @@ class ProjectConfig {
       pathPrefix: ''
     }
 
-    // Analyze
+    // Analyze (https://github.com/webpack-contrib/webpack-bundle-analyzer#options-for-plugin)
     this.analyzeBundle = process.env.ANALYZE === 'true'
-    this.analyzeConfig = {}
+    this.analyzeConfig = {
+      logLevel: this.debug
+    }
 
     // generateSitemap
     this.generateSitemap = this.isProd()

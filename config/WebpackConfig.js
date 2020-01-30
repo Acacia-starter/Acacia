@@ -5,7 +5,7 @@ const akaruConfig = require('../akaru.config')
 // Plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ZipWebpackPlugin = require('zip-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -191,7 +191,8 @@ class WebpackConfig {
       use: [{
         loader: 'file-loader',
         options: {
-          name: this.projectConfig.files.outputName
+          name: this.projectConfig.files.outputName,
+          esModule: false
         }
       }]
     })
@@ -268,8 +269,7 @@ class WebpackConfig {
 
     // Clean dist
     if (this.projectConfig.cleanDist) {
-      this.plugins.push(new CleanWebpackPlugin([this.projectConfig.paths.dist()], {
-        root: this.projectConfig.paths.base(),
+      this.plugins.push(new CleanWebpackPlugin({
         verbose: this.projectConfig.debug
       }))
     }
