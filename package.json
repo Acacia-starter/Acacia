@@ -1,5 +1,5 @@
 {
-  "name": "akaru-starter",
+  "name": "acacia",
   "version": "1.0.0",
   "license": "ISC",
   "description": "Configurable static site generator",
@@ -12,13 +12,13 @@
     "sass"
   ],
   "bugs": {
-    "url": "https://github.com/quentinneyraud/akaru-starter/issues"
+    "url": "https://github.com/Acacia-starter/Acacia/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/quentinneyraud/akaru-starter.git"
+    "url": "git+https://github.com/Acacia-starter/Acacia.git"
   },
-  "homepage": "https://quentinneyraud.github.io/akaru-starter",
+  "homepage": "https://github.com/Acacia-starter/Acacia",
   "author": {
     "name": "Quentin Neyraud",
     "email": "quentin.neyraud@gmail.com",
@@ -32,7 +32,7 @@
     }
   ],
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --watch config --watch akaru.config.js --quiet --exec 'node bin/dev.js'",
+    "dev": "cross-env NODE_ENV=development nodemon --watch config --watch acacia.config.js --quiet --exec 'node bin/dev.js'",
     "debug:routes": "node bin/debug-routes.js",
     "generate:analyze": "cross-env NODE_ENV=production npm run lint && cross-env NODE_ENV=production ANALYZE=true node bin/generate.js",
     "generate": "cross-env NODE_ENV=production npm run lint && cross-env NODE_ENV=production node bin/generate.js",

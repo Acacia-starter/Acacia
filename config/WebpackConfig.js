@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const webpack = require('webpack')
-const akaruConfig = require('../akaru.config')
+const acaciaConfig = require('../acacia.config')
 
 // Plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -25,8 +25,8 @@ class WebpackConfig {
     this.setPlugins()
     this.setConfig()
 
-    if (akaruConfig.extendWebpackConfig) {
-      akaruConfig.extendWebpackConfig(this.config, {
+    if (acaciaConfig.extendWebpackConfig) {
+      acaciaConfig.extendWebpackConfig(this.config, {
         env: this.projectConfig.env,
         isProd: this.projectConfig.isProd(),
         isDev: this.projectConfig.isDev()

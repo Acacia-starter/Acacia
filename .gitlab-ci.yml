@@ -29,6 +29,6 @@ deploy:
     - apt-get update -qy
     - apt-get install -y lftp
   script:
-    - lftp -e "open $FTP_HOST; user $FTP_USERNAME $FTP_PASSWORD; mirror -X .* -X .*/ --reverse --verbose --delete generate/ clients/akaru-starter/; bye"
+    - lftp -e "open $FTP_HOST; user $FTP_USERNAME $FTP_PASSWORD; mirror -X .* -X .*/ --reverse --verbose --delete generate/ $FTP_PATH; bye"
   only:
     - master

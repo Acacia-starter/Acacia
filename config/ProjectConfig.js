@@ -3,7 +3,7 @@ const path = require('path')
 const glob = require('glob')
 const defu = require('defu')
 const packageJson = require('../package.json')
-const akaruConfig = require('../akaru.config')
+const acaciaConfig = require('../acacia.config')
 
 const pathBase = path.resolve(__dirname, '..')
 
@@ -12,13 +12,13 @@ const AVAILABLE_STYLES_PREPROCESSORS = ['stylus', 'sass']
 class ProjectConfig {
   constructor () {
     this.env = process.env.NODE_ENV || 'development'
-    this.akaruConfig = akaruConfig
+    this.acaciaConfig = acaciaConfig
     this.setPaths()
     this.setBaseConfig()
 
     // If extendConfig is defined in config file, use it
-    if (this.akaruConfig.extendConfig) {
-      this.akaruConfig.extendConfig(this, {
+    if (this.acaciaConfig.extendConfig) {
+      this.acaciaConfig.extendConfig(this, {
         env: this.env,
         isProd: this.isProd(),
         isDev: this.isDev()
@@ -29,8 +29,8 @@ class ProjectConfig {
     this.setPages()
 
     // If extendPage is defined in config file, use it
-    if (this.akaruConfig.extendPages) {
-      this.akaruConfig.extendPages(this.pages, {
+    if (this.acaciaConfig.extendPages) {
+      this.acaciaConfig.extendPages(this.pages, {
         env: this.env,
         isProd: this.isProd(),
         isDev: this.isDev()
@@ -66,8 +66,8 @@ class ProjectConfig {
   }
 
   setBaseConfig () {
-    this.debug = this.akaruConfig.debug || process.env.DEBUG
-    this.baseUrl = this.akaruConfig.baseUrl
+    this.debug = this.acaciaConfig.debug || process.env.DEBUG
+    this.baseUrl = this.acaciaConfig.baseUrl
 
     // Common
     this.cleanDist = this.isProd()
@@ -87,14 +87,14 @@ class ProjectConfig {
 
     this.provideVariables = Object.assign({}, {
       ENV: this.env
-    }, this.akaruConfig.env)
+    }, this.acaciaConfig.env)
 
     // Metas
-    this.metas = this.akaruConfig.metas || {}
+    this.metas = this.acaciaConfig.metas || {}
 
     // Locales
-    this.locales = this.akaruConfig.locales || [{ code: 'fr', iso: 'fr_FR' }]
-    this.defaultLocale = this.akaruConfig.defaultLocale || this.locales[0]
+    this.locales = this.acaciaConfig.locales || [{ code: 'fr', iso: 'fr_FR' }]
+    this.defaultLocale = this.acaciaConfig.defaultLocale || this.locales[0]
 
     // Pages
     this.indexPage = 'home'
@@ -107,7 +107,7 @@ class ProjectConfig {
       cache: true,
       prefix: 'favicons/',
       favicons: {
-        appName: this.akaruConfig.siteName || this.metas.title,
+        appName: this.acaciaConfig.siteName || this.metas.title,
         appDescription: this.metas.description,
         lang: this.defaultLocale.iso,
         background: '#ddd',

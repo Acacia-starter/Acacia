@@ -1,11 +1,11 @@
-# Akaru starter
+# Acacia
 
 > Configurable static site generator
 
 ## Install
 
 ```bash
-$ git clone https://bitbucket.org/Quentin_Neyraud/akaru-starter/src/master my-project
+$ git clone git@github.com:Acacia-starter/Acacia.git my-project
 
 $ cd my-project
 
@@ -63,7 +63,7 @@ Lint js files and automatically fix problems
 ### add nunjucks extensions, filters, functions
 ### static folder
 ### browserlist
-### akaru config (extendConfig, extendWebpackConfig, extendRoutes)
+### acacia config (extendConfig, extendWebpackConfig, extendRoutes)
 ### metas
 ### Deploys (netlify, gitlab-ci)
 
