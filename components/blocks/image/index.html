@@ -3,13 +3,12 @@
 {% set props = props|merge({
   placement: 'cover',
   position: 'center center',
-  source: 'http://placecorgi.com/1200/800',
   alt: 'Image not loaded',
   sources: ['http://placecorgi.com/1200/800']
 }) %}
 
 {% set component = createComponent(component, {
-  id: 'image',
+  componentId: 'image',
   classes: [props.placement],
   styleVars: {
     placement: props.placement,
@@ -25,6 +24,6 @@
     {% for source in props.sources %}
       <source srcset="{{ source }}" alt="{{ props.alt }}">
     {% endfor %}
-    <img src="{{ props.source }}" alt="{{ props.alt }}">
+    <img src="{{ props.sources|last }}" alt="{{ props.alt }}">
   </picture>
 {% endblock %}

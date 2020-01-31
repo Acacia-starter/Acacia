@@ -1,4 +1,7 @@
 module.exports = (component = {}, additionnals = {}) => {
+  // componentId
+  component.componentId = component.componentId || additionnals.componentId
+
   // id
   component.id = component.id || additionnals.id
 

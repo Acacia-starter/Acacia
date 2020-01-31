@@ -1,12 +1,11 @@
 {% extends "component.html" %}
-{% set id = 'svg' %}
 
 {% set props = props|merge({
   name: null
 }) %}
 
 {% set component = createComponent(component, {
-  id: 'svg',
+  componentId: 'svg',
   classes: [props.name]
 }) %}
 

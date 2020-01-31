@@ -10,7 +10,7 @@ module.exports = component => {
   componentInfos.tag = component.tag || 'div'
 
   // classes
-  componentInfos.classes = [`${getFirstLetterUppercase(component.id)}--component`, 'component', ...component.classes]
+  componentInfos.classes = [`${getFirstLetterUppercase(component.componentId)}--component`, 'component', ...component.classes]
   componentInfos.classes = Array.from(new Set(componentInfos.classes))
   componentInfos.classesString = componentInfos.classes.join(' ')
 
@@ -30,7 +30,7 @@ module.exports = component => {
 
   // dataset
   componentInfos.dataset = Object.assign({}, component.dataset, {
-    component: component.id,
+    component: component.componentId,
     uid: '_' + Math.random().toString(36).substr(2, 9)
   })
   componentInfos.datasetString = Object.entries(componentInfos.dataset)
