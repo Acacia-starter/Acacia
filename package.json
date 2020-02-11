@@ -41,6 +41,7 @@
     "lint": "eslint assets/js components pages",
     "lint:fix": "eslint --fix assets/js components pages",
     "serve": "serve ./generate",
+    "check-accesibility": "node bin/check-accessibility.js",
     "postinstall": "link-module-alias"
   },
   "dependencies": {
@@ -53,6 +54,7 @@
     "@babel/core": "^7.8.4",
     "@babel/plugin-proposal-optional-chaining": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
+    "@jakepartusch/lumberjack": "^0.6.0",
     "@qneyraud/eslint-config": "1.0.4",
     "autoprefixer": "^9.7.4",
     "babel-eslint": "10.0.3",
