@@ -1,5 +1,5 @@
 {
   "hooks": {
-    "pre-commit": "npm run lint"
+    "pre-commit": "cross-env NODE_ENV=production npm run lint"
   }
 }
