@@ -148,7 +148,6 @@ class ProjectConfig {
       outputName: this.isProd() ? 'assets/css/[name].[hash].css' : '[name].css',
       sourcemaps: true,
       extractCriticalCss: this.isProd()
-      // extractCriticalCss: false
     }
 
     // Files
