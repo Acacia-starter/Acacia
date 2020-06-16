@@ -2,13 +2,13 @@
 {% set pageId = 'home' %}
 
 {% block pagecontent %}
-  {# <a href="{{ getUrl(currentUrl, '/about') }}">about</a>
+  {# <a href="{{ getUrl(currentUrl, '/about') }}">about</a> #}
 
   <img style="display:none" src="{{ static('./img/sample.jpg') }}"/>
 
-  {{ getAsset('svg/google.svg', 'raw') | safe }}
+  {# {{ getAsset('svg/google.svg', 'raw') | safe }} #}
 
-  {{ getAsset('svg/google.svg') | safe }}
+  {# {{ getAsset('svg/google.svg') | safe }} #}
 
   {% include 'blocks/image/index.html' with {
     props: {
@@ -17,6 +17,6 @@
     component: {
       classes: ['image']
     }
-  } %} #}
+  } %}
 
 {% endblock %}

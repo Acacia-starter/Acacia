@@ -1,6 +1,5 @@
 import { qsa, gebc } from '@qneyraud/q-utils'
-import Factory from '~j/lib/Factory'
-import EventBus from '~j/lib/helpers/event-bus'
+import App from '~j/lib/index'
 
 export default class Element {
   constructor ({ el, type, id, root, parent, page }) {
@@ -19,13 +18,21 @@ export default class Element {
     // datas
     this.refs = {}
     this.datas = this.el.dataset
-
-    this.$bus = EventBus
   }
 
-  createElement () {
+  async createElement () {
     this.setRefs()
-    this.setChildren()
+    this.injectPlugins()
+    await this.setChildren()
+  }
+
+  injectPlugins () {
+    const inject = (name, value) => {
+      this[`$${name}`] = value
+    }
+
+    App.plugins
+      .forEach(plugin => plugin({ inject }))
   }
 
   /**
@@ -71,13 +78,13 @@ export default class Element {
     return gebc(this.el, classes, all)
   }
 
-  setChildren () {
+  async setChildren () {
     this.children = []
 
-    this.children = gebc(this.el, 'js-component', true)
+    const promises = qsa(this.el, App.Config.get('componentSelector'))
       .filter(this.isInElementScope.bind(this))
-      .map(componentEl => {
-        const component = Factory.createComponent(componentEl, {
+      .map(async componentEl => {
+        const component = await App.Factory.createComponent(componentEl, {
           root: this.root,
           parent: this,
           page: (this.type === 'page') ? this : this.page
@@ -86,6 +93,8 @@ export default class Element {
         component.init()
         return component
       })
+
+    this.children = await Promise.all(promises)
   }
 
   getChildren () {
