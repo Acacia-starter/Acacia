@@ -22,6 +22,18 @@ class Factory {
     return this
   }
 
+  async getComponentClass (componentId) {
+    const match = this.components[componentId]
+
+    if (!match) {
+      return Component
+    } else if (typeof match.then === 'function') {
+      return (await match).default
+    } else {
+      return match
+    }
+  }
+
   matchPage (key, classRef) {
     this.pages[key] = classRef
 
@@ -37,46 +49,38 @@ class Factory {
     return this
   }
 
-  createComponent (el, datas) {
-    const componentId = el.dataset && el.dataset.component
-    let componentInstance
+  async getPageClass (pageId) {
+    const match = this.pages[pageId]
 
-    if (!this.components[componentId]) {
-      componentInstance = new Component({
-        ...datas,
-        el,
-        id: componentId
-      })
+    if (!match) {
+      return Page
+    } else if (typeof match.then === 'function') {
+      return (await match).default
     } else {
-      componentInstance = new this.components[componentId]({
-        ...datas,
-        el,
-        id: componentId
-      })
+      return match
     }
-
-    return componentInstance
   }
 
-  createPage (el, datas) {
+  async createComponent (el, datas) {
+    const componentId = el.dataset && el.dataset.component
+    const ComponentClass = await this.getComponentClass(componentId)
+
+    return new ComponentClass({
+      ...datas,
+      el,
+      id: componentId
+    })
+  }
+
+  async createPage (el, datas) {
     const pageId = el.dataset && el.dataset.page
-    let pageInstance
+    const PageClass = await this.getPageClass(pageId)
 
-    if (!this.pages[pageId]) {
-      pageInstance = new Page({
-        ...datas,
-        el,
-        id: pageId
-      })
-    } else {
-      pageInstance = new this.pages[pageId]({
-        ...datas,
-        el,
-        id: pageId
-      })
-    }
-
-    return pageInstance
+    return new PageClass({
+      ...datas,
+      el,
+      id: pageId
+    })
   }
 }
 

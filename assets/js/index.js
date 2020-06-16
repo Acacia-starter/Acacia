@@ -4,7 +4,7 @@ import Factory from '~j/lib/Factory'
 /**
  * Pages
  */
-import Home from '~p/home/index.js'
+// import Home from '~p/home/index.js'
 
 /**
  * Components
@@ -23,14 +23,14 @@ require('~s/index.styl')
 
 Factory
   .matchPages({
-    home: Home
+    home: import('~p/home/index.js')
   })
   .matchComponents({
     image: Image
   })
 
-const start = () => {
-  const page = Factory.createPage(qs(document.body, '.page'), {
+const start = async () => {
+  const page = await Factory.createPage(qs(document.body, '.page'), {
     root: document.body
   })
   page.createElement()
